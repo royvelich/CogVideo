@@ -1,0 +1,16 @@
+name: cog
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=11.8
+  - lightning
+  - numpy=1.26
+  - pip:
+    - -r requirements.txt
