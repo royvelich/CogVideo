@@ -6,8 +6,9 @@ from pathlib import Path
 import argparse
 from typing import Tuple, List, Dict, Any
 import numpy as np
+import cv2
 from diffusers import CogVideoXImageToVideoPipeline
-from diffusers.utils import export_to_video, load_image
+from diffusers.utils import load_image
 
 
 def resize_and_pad_image(image_path: str, target_height: int = 480, target_width: int = 720) -> Image.Image:
@@ -53,51 +54,64 @@ def resize_and_pad_image(image_path: str, target_height: int = 480, target_width
     return final_img
 
 
-def extract_frames(video_frames: List[Image.Image], output_dir: str, index: int) -> None:
+def extract_frames(video_frames: List[Image.Image], output_path: str) -> None:
     """
     Extract first and last frames from video and save them as images.
 
     Args:
         video_frames: List of PIL Images representing video frames
-        output_dir: Directory to save the extracted frames
-        index: Index of the current video for naming
+        output_path: Base path for saving the frames (without extension)
     """
     # Extract first and last frames (already PIL Images)
     first_frame = video_frames[0]
     last_frame = video_frames[-1]
 
     # Save frames
-    first_frame.save(os.path.join(output_dir, f'video_{index:03d}_first_frame.png'))
-    last_frame.save(os.path.join(output_dir, f'video_{index:03d}_last_frame.png'))
+    first_frame.save(f"{output_path}_first_frame.png")
+    last_frame.save(f"{output_path}_last_frame.png")
 
 
 def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) -> None:
     """
-    Convert PIL Image frames to video and save as MP4.
+    Convert PIL Image frames to video and save as MP4 using OpenCV.
 
     Args:
         video_frames: List of PIL Images representing video frames
         output_path: Path where to save the video
         fps: Frames per second for the output video
     """
-    # Convert PIL Images to numpy array with correct RGB order
-    frames_np = []
-    for frame in video_frames:
-        # Convert PIL Image to RGB numpy array
-        frame_np = np.array(frame)
-        # Ensure correct color channel order (RGB)
-        if frame_np.shape[-1] == 3:  # If it's a 3-channel image
-            frames_np.append(frame_np[..., ::-1])  # Reverse the color channels
+    if not video_frames:
+        raise ValueError("No frames provided")
 
-    frames_np = np.stack(frames_np)
+    # Convert first frame to numpy array to get dimensions
+    frame = np.array(video_frames[0])
+    height, width = frame.shape[:2]
 
-    # Save as video
-    export_to_video(frames_np, output_path, fps=fps)
+    # Initialize video writer
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(
+        output_path,
+        fourcc,
+        fps,
+        (width, height)
+    )
+
+    try:
+        # Write each frame
+        for frame in video_frames:
+            # Convert PIL Image to numpy array and change color space from RGB to BGR
+            frame_np = np.array(frame)
+            frame_bgr = cv2.cvtColor(frame_np, cv2.COLOR_RGB2BGR)
+            out.write(frame_bgr)
+    finally:
+        # Make sure to release the VideoWriter
+        out.release()
 
 
 def process_videos(annotations_path: str,
                    images_dir: str,
                    output_dir: str,
+                   seeds: List[int],
                    model_path: str = "THUDM/CogVideoX-5b-I2V") -> None:
     """
     Process images to videos using CogVideoX based on annotations.
@@ -106,6 +120,7 @@ def process_videos(annotations_path: str,
         annotations_path: Path to the annotations JSON file
         images_dir: Directory containing input images
         output_dir: Directory to save output videos and frames
+        seeds: List of random seeds to use for generation
         model_path: Path to the CogVideoX model
     """
     # Create output directory if it doesn't exist
@@ -135,22 +150,28 @@ def process_videos(annotations_path: str,
             image_path = os.path.join(images_dir, entry['image_name'])
             processed_image = resize_and_pad_image(image_path)
 
-            # Generate video
-            video_frames: List[Image.Image] = pipe(
-                prompt=entry['video_prompt'],
-                image=processed_image,
-                num_inference_steps=50,
-                num_frames=49,
-                guidance_scale=6.0,
-                generator=torch.Generator().manual_seed(42)
-            ).frames[0]
+            # Generate videos with different seeds
+            for seed_idx, seed in enumerate(seeds):
+                print(f"  Generating variant {seed_idx + 1}/{len(seeds)} with seed {seed}")
 
-            # Save video
-            video_path = os.path.join(output_dir, f'video_{idx:03d}.mp4')
-            save_video(video_frames, video_path)
+                # Generate video
+                video_frames: List[Image.Image] = pipe(
+                    prompt=entry['video_prompt'],
+                    image=processed_image,
+                    num_inference_steps=50,
+                    num_frames=49,
+                    guidance_scale=6.0,
+                    generator=torch.Generator().manual_seed(seed)
+                ).frames[0]
 
-            # Extract and save frames
-            extract_frames(video_frames, output_dir, idx)
+                # Create base path for this variant
+                base_path = os.path.join(output_dir, f'video_{idx:03d}_seed_{seed}')
+
+                # Save video
+                save_video(video_frames, f"{base_path}.mp4")
+
+                # Extract and save frames
+                extract_frames(video_frames, base_path)
 
         except Exception as e:
             print(f"Error processing entry {idx}: {str(e)}")
@@ -167,6 +188,8 @@ def main() -> None:
                         help='Directory to save output videos and frames')
     parser.add_argument('--model_path', type=str, default="THUDM/CogVideoX-5b-I2V",
                         help='Path to CogVideoX model')
+    parser.add_argument('--seeds', type=int, nargs='+', default=[42, 123, 456],
+                        help='Random seeds to use for generation')
 
     args = parser.parse_args()
 
@@ -174,6 +197,7 @@ def main() -> None:
         annotations_path=args.annotations,
         images_dir=args.images_dir,
         output_dir=args.output_dir,
+        seeds=args.seeds,
         model_path=args.model_path
     )
 
