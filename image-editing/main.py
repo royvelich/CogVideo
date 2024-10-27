@@ -201,9 +201,9 @@ def main() -> None:
                         help='Directory to save output videos and frames')
     parser.add_argument('--model_path', type=str, default="THUDM/CogVideoX-5b-I2V",
                         help='Path to CogVideoX model')
-    parser.add_argument('--seeds', type=int, nargs='+', default=[42, 123, 456],
+    parser.add_argument('--seeds', type=int, nargs='+', default=[11, 123, 456],
                         help='Random seeds to use for generation')
-    parser.add_argument('--guidance_scales', type=float, nargs='+', default=[6.0, 7.0, 8.0],
+    parser.add_argument('--guidance_scales', type=float, nargs='+', default=[7.0, 8.0, 9.0],
                         help='Guidance scale values to use for generation')
 
     args = parser.parse_args()
