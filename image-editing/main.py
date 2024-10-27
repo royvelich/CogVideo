@@ -149,6 +149,9 @@ def process_videos(annotations_path: str,
         try:
             print(f"Processing video {idx + 1}/{len(annotations)}")
 
+            # Get base name from image_name (remove extension)
+            base_name = os.path.splitext(entry['image_name'])[0]
+
             # Prepare image
             image_path = os.path.join(images_dir, entry['image_name'])
             processed_image = resize_and_pad_image(image_path)
@@ -174,7 +177,7 @@ def process_videos(annotations_path: str,
                     # Create base path for this variant
                     base_path = os.path.join(
                         output_dir,
-                        f'video_{idx:03d}_seed_{seed}_guidance_{guidance_scale:.1f}'
+                        f'{base_name}_seed_{seed}_guidance_{guidance_scale:.1f}'
                     )
 
                     # Save video
