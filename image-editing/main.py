@@ -112,6 +112,7 @@ def process_videos(annotations_path: str,
                    images_dir: str,
                    output_dir: str,
                    seeds: List[int],
+                   guidance_scales: List[float],
                    model_path: str = "THUDM/CogVideoX-5b-I2V") -> None:
     """
     Process images to videos using CogVideoX based on annotations.
@@ -121,6 +122,7 @@ def process_videos(annotations_path: str,
         images_dir: Directory containing input images
         output_dir: Directory to save output videos and frames
         seeds: List of random seeds to use for generation
+        guidance_scales: List of guidance scale values to use for generation
         model_path: Path to the CogVideoX model
     """
     # Create output directory if it doesn't exist
@@ -142,6 +144,7 @@ def process_videos(annotations_path: str,
     pipe.vae.enable_tiling()
 
     # Process each annotation
+    total_variants = len(seeds) * len(guidance_scales)
     for idx, entry in enumerate(annotations):
         try:
             print(f"Processing video {idx + 1}/{len(annotations)}")
@@ -150,28 +153,35 @@ def process_videos(annotations_path: str,
             image_path = os.path.join(images_dir, entry['image_name'])
             processed_image = resize_and_pad_image(image_path)
 
-            # Generate videos with different seeds
-            for seed_idx, seed in enumerate(seeds):
-                print(f"  Generating variant {seed_idx + 1}/{len(seeds)} with seed {seed}")
+            # Generate videos with different seeds and guidance scales
+            variant_count = 0
+            for seed in seeds:
+                for guidance_scale in guidance_scales:
+                    variant_count += 1
+                    print(f"  Generating variant {variant_count}/{total_variants} "
+                          f"(seed={seed}, guidance_scale={guidance_scale})")
 
-                # Generate video
-                video_frames: List[Image.Image] = pipe(
-                    prompt=entry['video_prompt'],
-                    image=processed_image,
-                    num_inference_steps=50,
-                    num_frames=49,
-                    guidance_scale=6.0,
-                    generator=torch.Generator().manual_seed(seed)
-                ).frames[0]
+                    # Generate video
+                    video_frames: List[Image.Image] = pipe(
+                        prompt=entry['video_prompt'],
+                        image=processed_image,
+                        num_inference_steps=50,
+                        num_frames=49,
+                        guidance_scale=guidance_scale,
+                        generator=torch.Generator().manual_seed(seed)
+                    ).frames[0]
 
-                # Create base path for this variant
-                base_path = os.path.join(output_dir, f'video_{idx:03d}_seed_{seed}')
+                    # Create base path for this variant
+                    base_path = os.path.join(
+                        output_dir,
+                        f'video_{idx:03d}_seed_{seed}_guidance_{guidance_scale:.1f}'
+                    )
 
-                # Save video
-                save_video(video_frames, f"{base_path}.mp4")
+                    # Save video
+                    save_video(video_frames, f"{base_path}.mp4")
 
-                # Extract and save frames
-                extract_frames(video_frames, base_path)
+                    # Extract and save frames
+                    extract_frames(video_frames, base_path)
 
         except Exception as e:
             print(f"Error processing entry {idx}: {str(e)}")
@@ -190,6 +200,8 @@ def main() -> None:
                         help='Path to CogVideoX model')
     parser.add_argument('--seeds', type=int, nargs='+', default=[42, 123, 456],
                         help='Random seeds to use for generation')
+    parser.add_argument('--guidance_scales', type=float, nargs='+', default=[6.0, 7.0, 8.0],
+                        help='Guidance scale values to use for generation')
 
     args = parser.parse_args()
 
@@ -198,6 +210,7 @@ def main() -> None:
         images_dir=args.images_dir,
         output_dir=args.output_dir,
         seeds=args.seeds,
+        guidance_scales=args.guidance_scales,
         model_path=args.model_path
     )
 

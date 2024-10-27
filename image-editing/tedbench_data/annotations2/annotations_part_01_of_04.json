@@ -1,0 +1,127 @@
+[
+    {
+        "image_name": "1.png",
+        "original_prompt": "A photo of a chair sawed in half.",
+        "video_prompt": "The chair is slowly sawed in half."
+    },
+    {
+        "image_name": "2.png",
+        "original_prompt": "A photo of a cat in a grass field.",
+        "video_prompt": "The cat calmly walks forward, moving from the dry patch to a lush grass field."
+    },
+    {
+        "image_name": "3.png",
+        "original_prompt": "A circus horse.",
+        "video_prompt": "The horse trots gracefully, its mane flowing. Gradually, circus elements like colorful streamers and a spotlight appear."
+    },
+    {
+        "image_name": "4.png",
+        "original_prompt": "A photo of a bird spreading wings.",
+        "video_prompt": "The kingfisher begins to gently spread its wings."
+    },
+    {
+        "image_name": "5.png",
+        "original_prompt": "A photo of a breakdancing dog.",
+        "video_prompt": "The dog starts moving energetically, spinning and jumping into breakdance moves."
+    },
+    {
+        "image_name": "6.png",
+        "original_prompt": "A photo of an open door.",
+        "video_prompt": "The door handle turns slowly, and the door swings open."
+    },
+    {
+        "image_name": "7.png",
+        "original_prompt": "A photo of a sleeping cat.",
+        "video_prompt": "The cat slowly lowers itself onto the ground, curling up and closing its eyes to sleep."
+    },
+    {
+        "image_name": "8.png",
+        "original_prompt": "A bowl of apples.",
+        "video_prompt": "The apples slowly move out of their basket and gently roll into a bowl."
+    },
+    {
+        "image_name": "9.png",
+        "original_prompt": "A bear eating a fish.",
+        "video_prompt": "The bear walks toward a river, crouches down, and catches a fish, beginning to eat it."
+    },
+    {
+        "image_name": "10.png",
+        "original_prompt": "A photo of a giraffe eating the grass below.",
+        "video_prompt": "The giraffe gently lowers its long neck until its mouth reaches the grass, beginning to eat."
+    },
+    {
+        "image_name": "11.png",
+        "original_prompt": "A photo of a closed book.",
+        "video_prompt": "The pages of the book gently begin to close, one by one, until it is fully shut."
+    },
+    {
+        "image_name": "12.png",
+        "original_prompt": "A photo of a teddy bear doing pushups.",
+        "video_prompt": "The teddy bear slowly animates, moving onto the ground, and starts doing pushups with steady movements."
+    },
+    {
+        "image_name": "13.png",
+        "original_prompt": "A photo of a birthday cake.",
+        "video_prompt": "The chocolate cake slowly transforms into a colorful birthday cake, topped with candles that gradually light up."
+    },
+    {
+        "image_name": "14.png",
+        "original_prompt": "A photo of a tomato in a blue tennis court.",
+        "video_prompt": "The tennis ball gently rolls across the blue tennis court, gradually transforming into a ripe tomato as it moves."
+    },
+    {
+        "image_name": "15.png",
+        "original_prompt": "A photo of a cat facing the camera.",
+        "video_prompt": "The cat slowly turns to face the camera, its gaze shifting forward."
+    },
+    {
+        "image_name": "16.png",
+        "original_prompt": "A girl riding a horse.",
+        "video_prompt": "The horse slows to a halt as a girl swings onto its back."
+    },
+    {
+        "image_name": "17.png",
+        "original_prompt": "Two bananas.",
+        "video_prompt": "A second banana smoothly slides into view beside the first, resting parallel to it."
+    },
+    {
+        "image_name": "18.png",
+        "original_prompt": "A photo of a rotten banana.",
+        "video_prompt": "The banana gradually browns and decays, spots darkening until it becomes completely rotten."
+    },
+    {
+        "image_name": "19.png",
+        "original_prompt": "A standing horse.",
+        "video_prompt": "The horse gradually slows its pace, coming to a gentle stop, and stands still."
+    },
+    {
+        "image_name": "20.png",
+        "original_prompt": "A goat and a cat hugging.",
+        "video_prompt": "The goat and cat gradually move closer together. We notice the goat gently lowers its head, and the cat leans in until they are side by side in a gentle embrace."
+    },
+    {
+        "image_name": "21.png",
+        "original_prompt": "Pizza with pineapple.",
+        "video_prompt": "The video begins with a cheese pizza as slices of pineapple are added on top."
+    },
+    {
+        "image_name": "22.png",
+        "original_prompt": "A parade on a street.",
+        "video_prompt": "The empty street gradually fills with colorful floats and people marching, forming a lively parade."
+    },
+    {
+        "image_name": "23.png",
+        "original_prompt": "A person riding on an elephant.",
+        "video_prompt": "The elephant moves gracefully forward, and a person climbs onto its back."
+    },
+    {
+        "image_name": "24.png",
+        "original_prompt": "A photo of a cat wearing a hat.",
+        "video_prompt": "The cat sits calmly, then a small hat gently appears on its head."
+    },
+    {
+        "image_name": "25.png",
+        "original_prompt": "A person with crossed arms.",
+        "video_prompt": "The person slowly crosses their arms over their chest."
+    }
+]

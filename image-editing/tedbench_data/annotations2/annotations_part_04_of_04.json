@@ -1,0 +1,127 @@
+[
+    {
+        "image_name": "76.png",
+        "original_prompt": "An apple tree.",
+        "video_prompt": "The tree slowly becomes laden with apples, the branches gently bending under their weight."
+    },
+    {
+        "image_name": "77.png",
+        "original_prompt": "A photo of a cat wearing an apron.",
+        "video_prompt": "The cat hops down, gently nuzzling into an apron that magically appears around its neck."
+    },
+    {
+        "image_name": "78.png",
+        "original_prompt": "A photo of a sitting dog.",
+        "video_prompt": "The dog gradually lowers itself into a sitting position on the sand."
+    },
+    {
+        "image_name": "79.png",
+        "original_prompt": "A photo of a willow tree.",
+        "video_prompt": "The tree's branches gradually droop and lengthen, transforming into the graceful, sweeping form of a willow."
+    },
+    {
+        "image_name": "80.png",
+        "original_prompt": "A photo of a vase of colorful tulips.",
+        "video_prompt": "The carnation bouquet gently transforms into a vibrant display of colorful tulips."
+    },
+    {
+        "image_name": "81.png",
+        "original_prompt": "A cracked egg.",
+        "video_prompt": "The egg slowly develops a crack, revealing the interior."
+    },
+    {
+        "image_name": "82.png",
+        "original_prompt": "An image of a post apocalyptic road.",
+        "video_prompt": "The sky darkens as clouds roll in, casting shadows over the empty road. Vegetation grows over the pavement, and broken vehicles appear scattered along the roadside, hinting at a post-apocalyptic landscape."
+    },
+    {
+        "image_name": "83.png",
+        "original_prompt": "A photo of a horse.",
+        "video_prompt": "The zebra\u2019s stripes gradually fade, blending into a solid color."
+    },
+    {
+        "image_name": "84.png",
+        "original_prompt": "A car in the year 1940.",
+        "video_prompt": "The modern car glides down the road, gradually fading into a sepia tone. The bodywork subtly reshapes, morphing into the classic lines of a 1940s car, while buildings blur, reflecting an earlier era."
+    },
+    {
+        "image_name": "85.png",
+        "original_prompt": "A photo of a zebra.",
+        "video_prompt": "The horse runs through a shadowy grove, gradually revealing stripes forming on its body, transforming into a zebra."
+    },
+    {
+        "image_name": "86.png",
+        "original_prompt": "A pot of flowers.",
+        "video_prompt": "The bouquet in the vase gracefully lowers into a pot filled with soil."
+    },
+    {
+        "image_name": "87.png",
+        "original_prompt": "A photo of a cat from behind.",
+        "video_prompt": "The cat gracefully turns around, revealing its back to the viewer."
+    },
+    {
+        "image_name": "88.png",
+        "original_prompt": "A standing bear.",
+        "video_prompt": "The bear pauses and slowly rises onto its hind legs, standing upright."
+    },
+    {
+        "image_name": "89.png",
+        "original_prompt": "A jumping horse.",
+        "video_prompt": "The horse begins trotting, gaining speed. It gracefully leaps over a small hurdle."
+    },
+    {
+        "image_name": "90.png",
+        "original_prompt": "Two dogs growling at each other.",
+        "video_prompt": "The dogs turn their heads to face each other, growling."
+    },
+    {
+        "image_name": "91.png",
+        "original_prompt": "A dog smoking a cigar.",
+        "video_prompt": "The dog tilts its head slightly, and a cigar appears in its mouth, emitting a small curl of smoke."
+    },
+    {
+        "image_name": "92.png",
+        "original_prompt": "A photo of a standing teddy bear.",
+        "video_prompt": "The teddy bear gradually shifts, gently rising to a standing position."
+    },
+    {
+        "image_name": "93.png",
+        "original_prompt": "A photo of a sitting giraffe.",
+        "video_prompt": "The giraffe gracefully lowers itself to the ground, tucking its legs beneath its body until it sits."
+    },
+    {
+        "image_name": "94.png",
+        "original_prompt": "A torn up teddy bear.",
+        "video_prompt": "The teddy bear's seams gradually unravel, and stuffing begins to fall out."
+    },
+    {
+        "image_name": "95.png",
+        "original_prompt": "A white horse in a grass field.",
+        "video_prompt": "The white horse continues running, transitioning from snow to a lush grass field as the scenery around changes from winter to a vibrant spring."
+    },
+    {
+        "image_name": "96.png",
+        "original_prompt": "A race car.",
+        "video_prompt": "The vintage car accelerates, its design morphing seamlessly into a sleek race car."
+    },
+    {
+        "image_name": "97.png",
+        "original_prompt": "A photo of a cat wearing a hat.",
+        "video_prompt": "The cat sits calmly, then a small hat gently appears on its head."
+    },
+    {
+        "image_name": "98.png",
+        "original_prompt": "A person clapping their hands.",
+        "video_prompt": "The person raises their hands and begins clapping."
+    },
+    {
+        "image_name": "99.png",
+        "original_prompt": "An elephant in a circus.",
+        "video_prompt": "The scene transforms as the elephant walks forward, transitioning to a vibrant circus setting with colorful tents in the background."
+    },
+    {
+        "image_name": "100.png",
+        "original_prompt": "A goat jumping over a cat.",
+        "video_prompt": "The goat crouches and leaps gracefully over the cat, landing softly."
+    }
+]

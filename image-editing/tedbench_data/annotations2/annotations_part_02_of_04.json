@@ -1,0 +1,127 @@
+[
+    {
+        "image_name": "26.png",
+        "original_prompt": "A door with a pet enterance.",
+        "video_prompt": "The camera slowly pans down to reveal a pet entrance at the bottom of the door."
+    },
+    {
+        "image_name": "27.png",
+        "original_prompt": "A photo of a tree. Taken in autumn.",
+        "video_prompt": "The leaves on the tree start to change color, transitioning from green to shades of orange and red, gently falling to the ground as the sky turns a soft autumn gray."
+    },
+    {
+        "image_name": "28.png",
+        "original_prompt": "A person giving a thumbs up.",
+        "video_prompt": "The person lifts their right hand, smoothly transitioning into a thumbs up."
+    },
+    {
+        "image_name": "29.png",
+        "original_prompt": "A sitting flamingo.",
+        "video_prompt": "The flamingo gracefully bends its legs and lowers itself to a sitting position on the sand."
+    },
+    {
+        "image_name": "30.png",
+        "original_prompt": "A vase of flowers filled with green water.",
+        "video_prompt": "The clear water in the vase gradually turns green."
+    },
+    {
+        "image_name": "31.png",
+        "original_prompt": "A horse raising its head.",
+        "video_prompt": "The horse gently lifts its head from grazing, looking toward the water."
+    },
+    {
+        "image_name": "32.png",
+        "original_prompt": "A photo of a traffic jam.",
+        "video_prompt": "Cars start to appear gradually on the empty highway, filling up the lanes until traffic comes to a standstill."
+    },
+    {
+        "image_name": "33.png",
+        "original_prompt": "A photo of a sliced banana.",
+        "video_prompt": "The banana peels itself, and slices start to appear."
+    },
+    {
+        "image_name": "34.png",
+        "original_prompt": "A photo of a cat yawning.",
+        "video_prompt": "The cat slowly closes its eyes and stretches its mouth wide, transitioning smoothly into a yawn."
+    },
+    {
+        "image_name": "35.png",
+        "original_prompt": "A photo of a yawning dog.",
+        "video_prompt": "The dog stands still, then slowly lowers its head and opens its mouth in a yawn."
+    },
+    {
+        "image_name": "36.png",
+        "original_prompt": "A photo of a coffee house in a street.",
+        "video_prompt": "The camera pans down the cobblestone street, reaching a cozy coffee house with people seated outside, sipping drinks."
+    },
+    {
+        "image_name": "37.png",
+        "original_prompt": "A teddy bear holding a cup.",
+        "video_prompt": "The teddy bear's arm gently moves upwards, a small cup appears in its grasp."
+    },
+    {
+        "image_name": "38.png",
+        "original_prompt": "A goat to the right of a cat.",
+        "video_prompt": "The goat and the cat gently nudge each other until the goat moves to the right of the cat."
+    },
+    {
+        "image_name": "39.png",
+        "original_prompt": "A photo of a dead tree.",
+        "video_prompt": "The vibrant green leaves gradually wither and fall, leaving behind barren branches against the sky."
+    },
+    {
+        "image_name": "40.png",
+        "original_prompt": "A goat hits a cat.",
+        "video_prompt": "The goat suddenly moves its head, lightly nudging the cat."
+    },
+    {
+        "image_name": "41.png",
+        "original_prompt": "A knocked down chair.",
+        "video_prompt": "The chair slightly tilts and falls over, resting on its side."
+    },
+    {
+        "image_name": "42.png",
+        "original_prompt": "Pizza with pepperoni.",
+        "video_prompt": "As the camera focuses on the pizza, pepperoni slices gradually appear on top, sizzling as they touch the cheese."
+    },
+    {
+        "image_name": "43.png",
+        "original_prompt": "A photo of a dog laying down.",
+        "video_prompt": "The dog slowly lowers itself to the ground, transitioning from standing to laying down."
+    },
+    {
+        "image_name": "44.png",
+        "original_prompt": "A photo of a jumping dog.",
+        "video_prompt": "The dog crouches slightly, then springs into a joyful jump against the sky, capturing the moment mid-air."
+    },
+    {
+        "image_name": "45.png",
+        "original_prompt": "A photo of an open box.",
+        "video_prompt": "The video begins with the closed box. A hand uses the knife to cut open the tape, and the flaps gently unfold, revealing the open box."
+    },
+    {
+        "image_name": "46.png",
+        "original_prompt": "A photo of a fruitful tree.",
+        "video_prompt": "The tree's branches gradually fill with colorful fruits, swaying gently in a breeze."
+    },
+    {
+        "image_name": "47.png",
+        "original_prompt": "A bird eating a fish.",
+        "video_prompt": "The bird suddenly swoops down into the water, emerging with a fish. It lands back on the perch, then begins eating its catch."
+    },
+    {
+        "image_name": "48.png",
+        "original_prompt": "A photo of a jumping cat.",
+        "video_prompt": "The cat crouches, preparing to jump. With a swift leap, it propels into the air, pausing mid-jump against the pink backdrop."
+    },
+    {
+        "image_name": "49.png",
+        "original_prompt": "A horse in a show jumping attire.",
+        "video_prompt": "The horse transitions as it trots forward, revealing show jumping attire."
+    },
+    {
+        "image_name": "50.png",
+        "original_prompt": "A half eaten pizza.",
+        "video_prompt": "A hand reaches in, taking a piece from the pizza, revealing a half-eaten state."
+    }
+]

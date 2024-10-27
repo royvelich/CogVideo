@@ -1,0 +1,127 @@
+[
+    {
+        "image_name": "51.png",
+        "original_prompt": "A black bear is walking in the grass next to red flowers.",
+        "video_prompt": "The black bear walks slowly through the grass, passing by red flowers that gradually appear in the frame."
+    },
+    {
+        "image_name": "52.png",
+        "original_prompt": "A photo of a car in Manhattan.",
+        "video_prompt": "The car drives forward, transitioning smoothly into a bustling Manhattan street."
+    },
+    {
+        "image_name": "53.png",
+        "original_prompt": "Image of a cat wearing a floral shirt.",
+        "video_prompt": "The cat sits calmly, then a floral shirt fades onto its body, transforming the scene smoothly."
+    },
+    {
+        "image_name": "54.png",
+        "original_prompt": "A photo of a standing cat.",
+        "video_prompt": "The cat rises gracefully from a sitting position to stand on all fours."
+    },
+    {
+        "image_name": "55.png",
+        "original_prompt": "A photo of a bird leaning down.",
+        "video_prompt": "The kingfisher tilts forward, gracefully leaning down."
+    },
+    {
+        "image_name": "56.png",
+        "original_prompt": "A cyclist riding in a street.",
+        "video_prompt": "As the video begins, the quiet street gradually hums with activity. A cyclist appears in the distance, riding through the cobbled road, moving closer until they pass by, creating a dynamic scene."
+    },
+    {
+        "image_name": "57.png",
+        "original_prompt": "Two kissing parrots.",
+        "video_prompt": "The two parrots inch closer together on the rope, turning their heads until their beaks touch affectionately."
+    },
+    {
+        "image_name": "58.png",
+        "original_prompt": "A standing elephant.",
+        "video_prompt": "The elephant slowly lifts its head and straightens its posture, transitioning from a walking position to standing still."
+    },
+    {
+        "image_name": "59.png",
+        "original_prompt": "A photo of a dancing teddy bear.",
+        "video_prompt": "The teddy bear gradually stands up and begins to dance joyfully."
+    },
+    {
+        "image_name": "60.png",
+        "original_prompt": "A photo of a peeled banana.",
+        "video_prompt": "The banana's peel gradually opens, revealing the fruit inside."
+    },
+    {
+        "image_name": "61.png",
+        "original_prompt": "A photo of a couple holding their hands on a beach.",
+        "video_prompt": "The couple slowly moves toward each other, reaching out to hold hands as the sun sets."
+    },
+    {
+        "image_name": "62.png",
+        "original_prompt": "A basket of oranges.",
+        "video_prompt": "The apples in the basket gradually change color to vibrant oranges."
+    },
+    {
+        "image_name": "63.png",
+        "original_prompt": "A photo of a bird cleaning itself.",
+        "video_prompt": "The kingfisher begins to gently nuzzle its feathers, transitioning to a scene of it preening."
+    },
+    {
+        "image_name": "64.png",
+        "original_prompt": "A photo of a jumping dog.",
+        "video_prompt": "The dog suddenly springs into the air, gracefully leaping forward."
+    },
+    {
+        "image_name": "65.png",
+        "original_prompt": "A photo of a vase of red roses.",
+        "video_prompt": "The colorful flowers in the vase gradually shift to deep red roses, transforming the arrangement. The background remains subtly blurred, keeping the focus on the changing bouquet."
+    },
+    {
+        "image_name": "66.png",
+        "original_prompt": "A cookie next to a glass of juice.",
+        "video_prompt": "The milk gradually transforms into juice as the cookie shifts slightly to sit beside the glass."
+    },
+    {
+        "image_name": "67.png",
+        "original_prompt": "A photo of a sitting dog.",
+        "video_prompt": "The dog gradually lowers itself from a standing position to sit on the grass."
+    },
+    {
+        "image_name": "68.png",
+        "original_prompt": "A bird looking backwards.",
+        "video_prompt": "The bird slowly turns its head backward, casting a glance over its shoulder."
+    },
+    {
+        "image_name": "69.png",
+        "original_prompt": "A photo of a vase of daisies.",
+        "video_prompt": "The carnations gradually transform into daisies, petals shifting and colors changing, till the bouquet is filled with vibrant daisies."
+    },
+    {
+        "image_name": "70.png",
+        "original_prompt": "A convertable car.",
+        "video_prompt": "As the red car speeds down the street, the camera focuses on the roof. The top quietly retracts, transforming the car into a convertible under the moving cityscape."
+    },
+    {
+        "image_name": "71.png",
+        "original_prompt": "A snow princess next to a unicorn.",
+        "video_prompt": "As the horse moves gracefully through the snow, it transforms into a unicorn. A snow princess emerges beside it, creating a magical winter scene."
+    },
+    {
+        "image_name": "72.png",
+        "original_prompt": "A busy congested street.",
+        "video_prompt": "Cars and buses start filling the once empty lanes, gradually building up until the street becomes a bustling, congested scene."
+    },
+    {
+        "image_name": "73.png",
+        "original_prompt": "A person in a greetting pose to Namaste hands.",
+        "video_prompt": "The person gently raises their hands to form a Namaste pose."
+    },
+    {
+        "image_name": "74.png",
+        "original_prompt": "A giraffe with a short neck.",
+        "video_prompt": "The giraffe\u2019s neck gradually shortens, bringing its head closer to its body."
+    },
+    {
+        "image_name": "75.png",
+        "original_prompt": "A photo of a door for room number 17.",
+        "video_prompt": "The camera slowly zooms in on the door. The number \"13\" smoothly changes to \"17\" as the shot transitions to the new door."
+    }
+]
