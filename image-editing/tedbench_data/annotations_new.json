@@ -4,7 +4,7 @@
             "llama_role": "Your job is to remove the 'A photo of' part (or a similar one) from the given prompt.",
             "llama_prompt": "${image_prompt}",
             "cog_prompt": "${llama_output}"
-        },
+        }
     ],
     "images": [
         {
