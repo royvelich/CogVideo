@@ -5,12 +5,6 @@
             "llama_prompt": "${image_prompt}",
             "cog_prompt": "${llama_output}"
         },
-        {
-            "llava_prompt": "Describe concisely the scene given in the image.",
-            "llama_role": "Your job is to convert a text prompt that is given to an image-to-image generation model, into an equivalent prompt that would be given to image-to-video generation model. Output only the converted prompt, keep it short and simple.",
-            "llama_prompt": "${image_prompt}",
-            "cog_prompt": "${llama_output}"
-        }
     ],
     "images": [
         {
