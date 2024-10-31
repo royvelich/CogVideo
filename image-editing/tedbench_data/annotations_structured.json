@@ -2,25 +2,16 @@
     "settings": [
         {
             "llava": {
-                "prompt": "Describe the scene given in the image using a single sentence."
+                "prompt": "Describe the scene given in the image using a single concise sentence."
             },
             "llama": {
-                "role": "Your job is to convert a text prompt that is given to an image-to-image generation model, into an equivalent prompt that would be given to image-to-video generation model. Output only the converted prompt, keep it short and simple.",
-                "prompt": "Make a video that transition into '${llava_output}'"
+                "role": "You are a helpful assistent. You should help me to create text prompts that describe how a video transition from one scene to another scene. Keep the prompts short and concise.",
+                "prompt": "Create transition from '${llava_output}' to '${image_prompt}"
             },
             "cog": {
                 "prompt": "${llama_output}"
             }
         },
-        {
-            "llama": {
-                "role": "Your job is to remove the 'A photo of' part (or a similar one) from the given prompt.",
-                "prompt": "${image_prompt}"
-            },
-            "cog": {
-                "prompt": "${llama_output}"
-            }
-        } 
     ],
     "images": [
         {
