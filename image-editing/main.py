@@ -7,10 +7,82 @@ import argparse
 from typing import Tuple, List, Dict, Any
 import numpy as np
 import cv2
+from datetime import datetime
+from typing import NamedTuple
+import dataclasses
+import copy
 from diffusers import CogVideoXImageToVideoPipeline
 from diffusers.utils import load_image
 from transformers import (pipeline, set_seed,
                           LlavaNextProcessor, LlavaNextForConditionalGeneration)
+
+
+@dataclasses.dataclass
+class ImageProcessingLog:
+    """Class to store processing information for each image."""
+    image_name: str
+    image_prompt: str
+    llava_prompt: str | None = None
+    llava_output: str | None = None
+    llama_role: str | None = None
+    llama_prompt: str | None = None
+    llama_output: str | None = None
+    final_prompt: str | None = None
+
+
+def setup_run_directories(base_output_dir: str) -> str:
+    """
+    Create directory structure for current run.
+
+    Args:
+        base_output_dir: Base output directory path
+
+    Returns:
+        Run directory path
+    """
+    # Create run directory with current date
+    current_date = datetime.now().strftime("%Y%m%d_%H%M%S")
+    run_dir = os.path.join(base_output_dir, current_date)
+    os.makedirs(run_dir, exist_ok=True)
+
+    return run_dir
+
+
+def save_run_config(run_dir: str, args: argparse.Namespace) -> None:
+    """
+    Save run configuration to JSON file.
+
+    Args:
+        run_dir: Run directory path
+        args: Command line arguments
+    """
+    config = {k: v for k, v in vars(args).items()}
+    config_path = os.path.join(run_dir, "run_config.json")
+    with open(config_path, 'w') as f:
+        json.dump(config, f, indent=2)
+
+
+def update_processing_log(log_path: str, image_log: ImageProcessingLog) -> None:
+    """
+    Update the processing log with new image information.
+
+    Args:
+        log_path: Path to log file
+        image_log: Image processing information
+    """
+    # Load existing log if it exists
+    if os.path.exists(log_path):
+        with open(log_path, 'r') as f:
+            log_data = json.load(f)
+    else:
+        log_data = {}
+
+    # Update log with new image data
+    log_data[image_log.image_name] = dataclasses.asdict(image_log)
+
+    # Save updated log
+    with open(log_path, 'w') as f:
+        json.dump(log_data, f, indent=2)
 
 
 def setup_llava_model() -> Tuple[LlavaNextForConditionalGeneration, LlavaNextProcessor]:
@@ -20,9 +92,9 @@ def setup_llava_model() -> Tuple[LlavaNextForConditionalGeneration, LlavaNextPro
     Returns:
         Tuple of (model, processor)
     """
-    processor = LlavaNextProcessor.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf")
+    processor = LlavaNextProcessor.from_pretrained("llava-v1.6-vicuna-7b-hf")
     model = LlavaNextForConditionalGeneration.from_pretrained(
-        "llava-hf/llava-v1.6-mistral-7b-hf",
+        "llava-v1.6-vicuna-7b-hf",
         torch_dtype=torch.float16,
         low_cpu_mem_usage=True
     )
@@ -64,15 +136,13 @@ def get_image_caption(image: Image.Image,
 
     # Generate caption
     output = model.generate(**inputs, max_new_tokens=100)
-    raw_caption = processor.decode(output[0], skip_special_tokens=True)
+    caption = processor.decode(output[0], skip_special_tokens=True)
 
-    # Clean up the caption - remove everything before and including [/INST]
-    if "[/INST]" in raw_caption:
-        cleaned_caption = raw_caption.split("[/INST]")[1].strip()
-    else:
-        cleaned_caption = raw_caption.strip()
+    # Clean up caption - remove everything before and including [/INST]
+    if "[/INST]" in caption:
+        caption = caption.split("[/INST]")[1].strip()
 
-    return cleaned_caption
+    return caption
 
 
 def setup_llama_pipeline(llama_seed: int | None) -> Any:
@@ -270,7 +340,8 @@ def process_videos(annotations_path: str,
     """
     Process images to videos using CogVideoX based on annotations.
     """
-    os.makedirs(output_dir, exist_ok=True)
+    # Create run directory structure
+    run_dir = setup_run_directories(output_dir)
 
     # Load annotations
     with open(annotations_path, 'r') as f:
@@ -305,10 +376,23 @@ def process_videos(annotations_path: str,
     for setting_idx, setting in enumerate(settings):
         print(f"Processing setting {setting_idx + 1}/{len(settings)}")
 
+        # Create directory for current setting
+        setting_dir = os.path.join(run_dir, f"setting_{setting_idx}")
+        os.makedirs(setting_dir, exist_ok=True)
+
+        # Initialize processing log for this setting
+        log_path = os.path.join(setting_dir, "processing_log.json")
+
         # Process each image with current setting
         for idx, entry in enumerate(images):
             try:
                 print(f"  Processing image {idx + 1}/{len(images)}")
+
+                # Initialize image processing log
+                image_log = ImageProcessingLog(
+                    image_name=entry['image_name'],
+                    image_prompt=entry['image_prompt']
+                )
 
                 # Get base name from image_name (remove extension)
                 base_name = os.path.splitext(entry['image_name'])[0]
@@ -320,6 +404,8 @@ def process_videos(annotations_path: str,
 
                 # Run LLaVA if prompt is provided in settings
                 if "llava_prompt" in setting:
+                    image_log.llava_prompt = setting["llava_prompt"]
+
                     # Prepare image
                     image_path = os.path.join(images_dir, entry['image_name'])
                     image = Image.open(image_path)
@@ -335,9 +421,12 @@ def process_videos(annotations_path: str,
                     )
                     print(f"    LLaVA caption: {llava_caption}")
                     context["llava_output"] = llava_caption
+                    image_log.llava_output = llava_caption
 
                 # Process with Llama
                 llama_prompt = replace_placeholders(setting["llama_prompt"], context)
+                image_log.llama_prompt = llama_prompt
+                image_log.llama_role = setting["llama_role"]
 
                 # Generate video prompt using Llama
                 llama_output = get_video_prompt(
@@ -351,10 +440,15 @@ def process_videos(annotations_path: str,
                 )
                 print(f"    Llama output: {llama_output}")
                 context["llama_output"] = llama_output
+                image_log.llama_output = llama_output
 
                 # Get final prompt for CogVideo
-                cog_prompt = replace_placeholders(setting["cog_prompt"], context)
-                print(f"    Final prompt: {cog_prompt}")
+                final_prompt = replace_placeholders(setting["cog_prompt"], context)
+                print(f"    Final prompt: {final_prompt}")
+                image_log.final_prompt = final_prompt
+
+                # Update processing log
+                update_processing_log(log_path, image_log)
 
                 # Prepare image for CogVideoX if not done already
                 if "processed_image" not in context:
@@ -372,7 +466,7 @@ def process_videos(annotations_path: str,
 
                         # Generate video
                         video_frames: List[Image.Image] = cog_pipe(
-                            prompt=cog_prompt,
+                            prompt=final_prompt,
                             image=context["processed_image"],
                             num_inference_steps=50,
                             num_frames=49,
@@ -382,8 +476,8 @@ def process_videos(annotations_path: str,
 
                         # Create base path for this variant
                         base_path = os.path.join(
-                            output_dir,
-                            f'{base_name}_setting_{setting_idx}_seed_{seed}_guidance_{guidance_scale:.1f}'
+                            setting_dir,
+                            f'{base_name}_seed_{seed}_guidance_{guidance_scale:.1f}'
                         )
 
                         # Save video
@@ -425,6 +519,10 @@ def main() -> None:
     parser.set_defaults(do_sample=True)
 
     args = parser.parse_args()
+
+    # Create run directory and save configuration
+    run_dir = setup_run_directories(args.output_dir)
+    save_run_config(run_dir, args)
 
     process_videos(
         annotations_path=args.annotations,
