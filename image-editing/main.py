@@ -30,6 +30,36 @@ class ImageProcessingLog:
     final_prompt: str | None = None
 
 
+def split_into_groups(items: List[Any], num_groups: int) -> List[List[Any]]:
+    """
+    Split a list into K approximately equal sized groups.
+
+    Args:
+        items: List to split
+        num_groups: Number of groups to create
+
+    Returns:
+        List of groups
+    """
+    # Calculate base size and remainder
+    n = len(items)
+    base_size = n // num_groups
+    remainder = n % num_groups
+
+    groups = []
+    start = 0
+
+    # Create groups
+    for i in range(num_groups):
+        # Add one extra item to the first 'remainder' groups
+        group_size = base_size + (1 if i < remainder else 0)
+        end = start + group_size
+        groups.append(items[start:end])
+        start = end
+
+    return groups
+
+
 def setup_run_directories(base_output_dir: str) -> str:
     """
     Create directory structure for current run.
@@ -336,7 +366,9 @@ def process_videos(annotations_path: str,
                    top_p: float,
                    do_sample: bool,
                    llama_seed: int | None,
-                   model_path: str = "THUDM/CogVideoX-5b-I2V") -> None:
+                   model_path: str = "THUDM/CogVideoX-5b-I2V",
+                   num_groups: int | None = None,
+                   group_index: int | None = None) -> None:
     """
     Process images to videos using CogVideoX based on annotations.
     """
@@ -347,22 +379,54 @@ def process_videos(annotations_path: str,
     with open(annotations_path, 'r') as f:
         annotations = json.load(f)
 
-    # Setup models
-    llama_pipe = setup_llama_pipeline(llama_seed)
-    llava_model, llava_processor = setup_llava_model()
+    # Setup models only if needed
+    all_settings = annotations.get("settings", [])
+
+    # Check if we need Llama and LLaVA models
+    needs_llama = any("llama" in setting for setting in all_settings)
+    needs_llava = any("llava" in setting for setting in all_settings)
+
+    llama_pipe = None
+    llava_model, llava_processor = None, None
+
+    if needs_llama:
+        llama_pipe = setup_llama_pipeline(llama_seed)
+    if needs_llava:
+        llava_model, llava_processor = setup_llava_model()
+
+    # Setup CogVideo model
     cog_pipe = CogVideoXImageToVideoPipeline.from_pretrained(
         model_path,
         torch_dtype=torch.bfloat16
     )
 
-    # Enable CPU offload for memory efficiency
     cog_pipe.enable_sequential_cpu_offload()
     cog_pipe.vae.enable_slicing()
     cog_pipe.vae.enable_tiling()
 
-    # Get settings and images from annotations
-    settings = annotations.get("settings", [])
-    images = annotations.get("images", [])
+    # Handle group processing
+    all_images = annotations.get("images", [])
+    if num_groups is not None and group_index is not None:
+        image_groups = split_into_groups(all_images, num_groups)
+        if not 0 <= group_index < num_groups:
+            raise ValueError(f"Group index {group_index} is out of range [0, {num_groups - 1}]")
+        images = image_groups[group_index]
+        print(f"Processing group {group_index + 1}/{num_groups} with {len(images)} images")
+    else:
+        images = all_images
+        image_groups = [all_images]
+
+    # Save group information
+    group_info = {
+        "total_images": len(all_images),
+        "num_groups": num_groups,
+        "group_index": group_index,
+        "group_size": len(images),
+        "group_start_idx": sum(len(g) for g in image_groups[:group_index]) if num_groups is not None else 0,
+        "group_end_idx": sum(len(g) for g in image_groups[:group_index + 1]) if num_groups is not None else len(all_images)
+    }
+    with open(os.path.join(run_dir, "group_info.json"), 'w') as f:
+        json.dump(group_info, f, indent=2)
 
     def replace_placeholders(text: str, context: Dict[str, str]) -> str:
         """Replace placeholders in text with their values from context."""
@@ -373,90 +437,88 @@ def process_videos(annotations_path: str,
         return text
 
     # Process each setting
-    for setting_idx, setting in enumerate(settings):
-        print(f"Processing setting {setting_idx + 1}/{len(settings)}")
+    for setting_idx, setting in enumerate(all_settings):
+        print(f"Processing setting {setting_idx + 1}/{len(all_settings)}")
 
-        # Create directory for current setting
         setting_dir = os.path.join(run_dir, f"setting_{setting_idx}")
         os.makedirs(setting_dir, exist_ok=True)
-
-        # Initialize processing log for this setting
         log_path = os.path.join(setting_dir, "processing_log.json")
 
-        # Process each image with current setting
+        # Process each image
         for idx, entry in enumerate(images):
             try:
                 print(f"  Processing image {idx + 1}/{len(images)}")
 
-                # Initialize image processing log
                 image_log = ImageProcessingLog(
                     image_name=entry['image_name'],
                     image_prompt=entry['image_prompt']
                 )
 
-                # Get base name from image_name (remove extension)
                 base_name = os.path.splitext(entry['image_name'])[0]
-
-                # Initialize context for placeholder replacement
                 context = {
                     "image_prompt": entry['image_prompt']
                 }
 
-                # Run LLaVA if prompt is provided in settings
-                if "llava_prompt" in setting:
-                    image_log.llava_prompt = setting["llava_prompt"]
+                final_prompt = None
 
-                    # Prepare image
+                # Run LLaVA if specified in settings
+                if "llava" in setting and llava_model is not None:
+                    llava_config = setting["llava"]
+                    image_log.llava_prompt = llava_config["prompt"]
+
                     image_path = os.path.join(images_dir, entry['image_name'])
                     image = Image.open(image_path)
                     if image.mode != 'RGB':
                         image = image.convert('RGB')
 
-                    # Get LLaVA caption
                     llava_caption = get_image_caption(
                         image=image,
                         model=llava_model,
                         processor=llava_processor,
-                        prompt=setting["llava_prompt"]
+                        prompt=llava_config["prompt"]
                     )
                     print(f"    LLaVA caption: {llava_caption}")
                     context["llava_output"] = llava_caption
                     image_log.llava_output = llava_caption
 
-                # Process with Llama
-                llama_prompt = replace_placeholders(setting["llama_prompt"], context)
-                image_log.llama_prompt = llama_prompt
-                image_log.llama_role = setting["llama_role"]
+                # Process with Llama if specified in settings
+                if "llama" in setting and llama_pipe is not None:
+                    llama_config = setting["llama"]
+                    llama_prompt = replace_placeholders(llama_config["prompt"], context)
+                    image_log.llama_prompt = llama_prompt
+                    image_log.llama_role = llama_config["role"]
 
-                # Generate video prompt using Llama
-                llama_output = get_video_prompt(
-                    llama_pipe=llama_pipe,
-                    original_prompt=llama_prompt,
-                    role=setting["llama_role"],
-                    max_new_tokens=max_new_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    do_sample=do_sample
-                )
-                print(f"    Llama output: {llama_output}")
-                context["llama_output"] = llama_output
-                image_log.llama_output = llama_output
+                    llama_output = get_video_prompt(
+                        llama_pipe=llama_pipe,
+                        original_prompt=llama_prompt,
+                        role=llama_config["role"],
+                        max_new_tokens=max_new_tokens,
+                        temperature=temperature,
+                        top_p=top_p,
+                        do_sample=do_sample
+                    )
+                    print(f"    Llama output: {llama_output}")
+                    context["llama_output"] = llama_output
+                    image_log.llama_output = llama_output
 
                 # Get final prompt for CogVideo
-                final_prompt = replace_placeholders(setting["cog_prompt"], context)
+                if "cog" not in setting:
+                    raise ValueError(f"Setting {setting_idx} missing required 'cog' configuration")
+
+                final_prompt = replace_placeholders(setting["cog"]["prompt"], context)
                 print(f"    Final prompt: {final_prompt}")
                 image_log.final_prompt = final_prompt
 
                 # Update processing log
                 update_processing_log(log_path, image_log)
 
-                # Prepare image for CogVideoX if not done already
+                # Prepare image for CogVideoX
                 if "processed_image" not in context:
                     image_path = os.path.join(images_dir, entry['image_name'])
                     processed_image = resize_and_pad_image(image_path)
                     context["processed_image"] = processed_image
 
-                # Generate videos with different seeds and guidance scales
+                # Generate videos
                 variant_count = 0
                 for seed in seeds:
                     for guidance_scale in guidance_scales:
@@ -464,7 +526,6 @@ def process_videos(annotations_path: str,
                         print(f"      Generating variant {variant_count}/{len(seeds) * len(guidance_scales)} "
                               f"(seed={seed}, guidance_scale={guidance_scale})")
 
-                        # Generate video
                         video_frames: List[Image.Image] = cog_pipe(
                             prompt=final_prompt,
                             image=context["processed_image"],
@@ -474,16 +535,12 @@ def process_videos(annotations_path: str,
                             generator=torch.Generator().manual_seed(seed)
                         ).frames[0]
 
-                        # Create base path for this variant
                         base_path = os.path.join(
                             setting_dir,
                             f'{base_name}_seed_{seed}_guidance_{guidance_scale:.1f}'
                         )
 
-                        # Save video
                         save_video(video_frames, f"{base_path}.mp4")
-
-                        # Extract and save frames
                         extract_frames(video_frames, base_path)
 
             except Exception as e:
@@ -516,9 +573,23 @@ def main() -> None:
     parser.add_argument('--llama_seed', type=int, default=None,
                         help='Seed for Llama text generation (optional)')
 
+    # Add new arguments for group processing
+    parser.add_argument('--num_groups', type=int, default=None,
+                        help='Number of groups to split images into')
+    parser.add_argument('--group_index', type=int, default=None,
+                        help='Index of group to process (0-based)')
+
     parser.set_defaults(do_sample=True)
 
     args = parser.parse_args()
+
+    # Validate group processing arguments
+    if (args.num_groups is None) != (args.group_index is None):
+        parser.error("Both --num_groups and --group_index must be provided for group processing")
+
+    if args.num_groups is not None and args.group_index is not None:
+        if args.group_index >= args.num_groups:
+            parser.error(f"Group index must be less than number of groups (0 to {args.num_groups - 1})")
 
     # Create run directory and save configuration
     run_dir = setup_run_directories(args.output_dir)
@@ -535,7 +606,9 @@ def main() -> None:
         top_p=args.top_p,
         do_sample=args.do_sample,
         llama_seed=args.llama_seed,
-        model_path=args.model_path
+        model_path=args.model_path,
+        num_groups=args.num_groups,
+        group_index=args.group_index
     )
 
 

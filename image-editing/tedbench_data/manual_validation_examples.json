@@ -1,0 +1,136 @@
+[   
+    {
+        "image_name": "4.png",
+        "no_process": "Closed wings replaced by spread wings",
+        "process_short": "A bird opening its wings",
+        "process_long": "A bird slowly opening its wings to a fully spread position"
+    },
+    {
+        "image_name": "38.png",
+        "no_process": "A goat transfers to the right of the cat",
+        "process_short": "The goat walks to the right of the cat",
+        "process_long": "The goat walks to the opposite side of the cat positioning itself to the right of it"
+    },
+    {
+        "image_name": "81.png",
+        "no_process": "An egg transforms to cracked egg",
+        "process_short": "An egg cracks open",
+        "process_long": "An egg cracks open, revealing its inner contents"
+    },
+    {
+        "image_name": "82.png",
+        "no_process": "Normal road transformed into post apocalyptic state",
+        "process_short": "An apocalipce approaches the road.",
+        "process_long": "An apocalypse is near as nature reclaims the road, with vegetation breaking through cracks and abandoned vehicles weathering away."
+    },
+    {
+        "image_name": "83.png",
+        "no_process": "A Zebra replaced by a horse.",
+        "process_short": "A zebra's stripes fade away and reveal a horse.",
+        "process_long": "A zebra's black and white stripes gradually fade, transforming it into the solid-colored horse."
+    },
+    {
+        "image_name": "84.png",
+        "no_process": "A 1940s automobile replaces the current car",
+        "process_short": "A 1940s car drives in the scene as the current car exits.",
+        "process_long": "A 1940s car enters the scene as the current car speeds up and exits."
+    },
+    {
+        "image_name": "85.png",
+        "no_process": "White horse coat replaced with zebra stripes",
+        "process_short": "Zebra stripes apear on the horses coat",
+        "process_long": "Black stripes gradually appear on the horse's white coat, transforming it into a zebra pattern."
+    },
+    {
+        "image_name": "86.png",
+        "no_process": "Glass pitcher transformed into a flower pot.",
+        "process_short": "Someone replaces the glass pitcher into a flower pot.",
+        "process_long": "The flowers are gently lifted from the glass pitcher. The glass pitcher is replaced with a flower pot, and the flowers are placed inside."
+    },
+    {
+        "image_name": "87.png",
+        "no_process": "Cat view transforms to rear view.",
+        "process_short": "The cat turning away to show its back.",
+        "process_long": "The cat gradually turns its head, then its body, until it fully faces away, showing only its back to the camera."
+    },
+    {
+        "image_name": "88.png",
+        "no_process": "The bear pose transforms to a standing bear pose",
+        "process_short": "The bear stands up on two feets",
+        "process_long": "The bear pauses, then rises onto its hind legs, shifting into a standing position."
+    },
+    {
+        "image_name": "89.png",
+        "no_process": "The horse position transforms to a jumping pose",
+        "process_short": "The horse jumps",
+        "process_long": "The horse bends its legs, gathers energy, and then leaps into the air."
+    },
+    {
+        "image_name": "90.png",
+        "no_process": "The dogs' faces are replaced by growling expressions toward each other.",
+        "process_short": "The dogs growl at each other.",
+        "process_long": "The dogs turn to face each other, baring their teeth and growling in anger."
+    },
+    {
+        "image_name": "91.png",
+        "no_process": "A smoking cigar apears in the dog's mouth",
+        "process_short": "A cigar is put in the dog's mouth",
+        "process_long": "A lit cigar is placed in the dog's mouth, with smoke appearing as if the dog is smoking."
+    },
+    {
+        "image_name": "92.png",
+        "no_process": "The teddy bear's sitting pose changes to a standing pose.",
+        "process_short": "The teddy bear stands up.",
+        "process_long": "The teddy bear gently uses its feet to rise into a standing position."
+    },
+    {
+        "image_name": "93.png",
+        "no_process": "The giraffe's pose pose changes to a siting pose.",
+        "process_short": "The giraffe sits down",
+        "process_long": "The giraffe gracefully lowers itself to the ground, tucking its legs beneath its body until it’s fully seated."
+    },
+    {
+        "image_name": "94.png",
+        "no_process": "The teddy bear is apears torn up",
+        "process_short": "The teddy bear gradualy gets torn up",
+        "process_long": "A child aggressively tears up the teddy bear, leaving it damaged and discarded."
+    },
+    {
+        "image_name": "95.png",
+        "no_process": "The snow is replaced by a grass field",
+        "process_short": "The snow melts and reveals a grass field",
+        "process_long": "The snow gradually melts and reveals a lush grass field"
+    },
+    {
+        "image_name": "96.png",
+        "no_process": "The car transforms into a race car",
+        "process_short": "The car transforms into a race car",
+        "process_long": "The classic car slowly transforms into a race car",
+    }
+    ,
+    {
+        "image_name": "97.png",
+        "no_process": "The cat's bare head is replaced by a hat",
+        "process_short": "A hat is placed on the cat's head",
+        "process_long": "Someone gently places a hat on top of the cat's bare head"
+    }
+    ,
+    {
+        "image_name": "98.png",
+        "no_process": "The resting hands are replaced by clapping hands",
+        "process_short": "A person claps their hands",
+        "process_long": "A person slowly lifts their hands and claps them together"
+    },
+    {
+        "image_name": "99.png",
+        "no_process": "The field turns into a circus",
+        "process_short": "The elphant walks into a circus",
+        "process_long": "The elphant enters a vivid circus setting"
+    },
+    {
+        "image_name": "100.png",
+        "no_process": "The goat's standing position changes to one where it jumps over the cat",
+        "process_short": "The goat jumps over the cat",
+        "process_long": "The goat slowly approaches the cat and jumps over it"
+    }
+]

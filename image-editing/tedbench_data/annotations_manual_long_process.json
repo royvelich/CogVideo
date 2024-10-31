@@ -1,0 +1,99 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        } 
+    ],
+    "images": [
+        {
+            "image_name": "4.png",
+            "image_prompt": "A bird slowly opening its wings to a fully spread position"
+        },
+        {
+            "image_name": "38.png",
+            "image_prompt": "The goat walks to the opposite side of the cat positioning itself to the right of it"
+        },
+        {
+            "image_name": "81.png",
+            "image_prompt": "An egg cracks open, revealing its inner contents"
+        },
+        {
+            "image_name": "82.png",
+            "image_prompt": "An apocalypse is near as nature reclaims the road, with vegetation breaking through cracks and abandoned vehicles weathering away."
+        },
+        {
+            "image_name": "83.png",
+            "image_prompt": "A zebra's black and white stripes gradually fade, transforming it into the solid-colored horse."
+        },
+        {
+            "image_name": "84.png",
+            "image_prompt": "A 1940s car enters the scene as the current car speeds up and exits."
+        },
+        {
+            "image_name": "85.png",
+            "image_prompt": "Black stripes gradually appear on the horse's white coat, transforming it into a zebra pattern."
+        },
+        {
+            "image_name": "86.png",
+            "image_prompt": "The flowers are gently lifted from the glass pitcher. The glass pitcher is replaced with a flower pot, and the flowers are placed inside."
+        },
+        {
+            "image_name": "87.png",
+            "image_prompt": "The cat gradually turns its head, then its body, until it fully faces away, showing only its back to the camera."
+        },
+        {
+            "image_name": "88.png",
+            "image_prompt": "The bear pauses, then rises onto its hind legs, shifting into a standing position."
+        },
+        {
+            "image_name": "89.png",
+            "image_prompt": "The horse bends its legs, gathers energy, and then leaps into the air."
+        },
+        {
+            "image_name": "90.png",
+            "image_prompt": "The dogs turn to face each other, baring their teeth and growling in anger."
+        },
+        {
+            "image_name": "91.png",
+            "image_prompt": "A lit cigar is placed in the dog's mouth, with smoke appearing as if the dog is smoking."
+        },
+        {
+            "image_name": "92.png",
+            "image_prompt": "The teddy bear gently uses its feet to rise into a standing position."
+        },
+        {
+            "image_name": "93.png",
+            "image_prompt": "The giraffe gracefully lowers itself to the ground, tucking its legs beneath its body until it's fully seated."
+        },
+        {
+            "image_name": "94.png",
+            "image_prompt": "A child aggressively tears up the teddy bear, leaving it damaged and discarded."
+        },
+        {
+            "image_name": "95.png",
+            "image_prompt": "The snow gradually melts and reveals a lush grass field"
+        },
+        {
+            "image_name": "96.png",
+            "image_prompt": "The classic car slowly transforms into a race car"
+        },
+        {
+            "image_name": "97.png",
+            "image_prompt": "Someone gently places a hat on top of the cat's bare head"
+        },
+        {
+            "image_name": "98.png",
+            "image_prompt": "A person slowly lifts their hands and claps them together"
+        },
+        {
+            "image_name": "99.png",
+            "image_prompt": "The elphant enters a vivid circus setting"
+        },
+        {
+            "image_name": "100.png",
+            "image_prompt": "The goat slowly approaches the cat and jumps over it"
+        }
+    ]
+}

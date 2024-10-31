@@ -1,0 +1,99 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        } 
+    ],
+    "images": [
+        {
+            "image_name": "4.png",
+            "image_prompt": "A bird opening its wings"
+        },
+        {
+            "image_name": "38.png",
+            "image_prompt": "The goat walks to the right of the cat"
+        },
+        {
+            "image_name": "81.png",
+            "image_prompt": "An egg cracks open"
+        },
+        {
+            "image_name": "82.png",
+            "image_prompt": "An apocalipce approaches the road."
+        },
+        {
+            "image_name": "83.png",
+            "image_prompt": "A zebra's stripes fade away and reveal a horse."
+        },
+        {
+            "image_name": "84.png",
+            "image_prompt": "A 1940s car drives in the scene as the current car exits."
+        },
+        {
+            "image_name": "85.png",
+            "image_prompt": "Zebra stripes apear on the horses coat"
+        },
+        {
+            "image_name": "86.png",
+            "image_prompt": "Someone replaces the glass pitcher into a flower pot."
+        },
+        {
+            "image_name": "87.png",
+            "image_prompt": "The cat turning away to show its back."
+        },
+        {
+            "image_name": "88.png",
+            "image_prompt": "The bear stands up on two feets"
+        },
+        {
+            "image_name": "89.png",
+            "image_prompt": "The horse jumps"
+        },
+        {
+            "image_name": "90.png",
+            "image_prompt": "The dogs growl at each other."
+        },
+        {
+            "image_name": "91.png",
+            "image_prompt": "A cigar is put in the dog's mouth"
+        },
+        {
+            "image_name": "92.png",
+            "image_prompt": "The teddy bear stands up."
+        },
+        {
+            "image_name": "93.png",
+            "image_prompt": "The giraffe sits down"
+        },
+        {
+            "image_name": "94.png",
+            "image_prompt": "The teddy bear gradualy gets torn up"
+        },
+        {
+            "image_name": "95.png",
+            "image_prompt": "The snow melts and reveals a grass field"
+        },
+        {
+            "image_name": "96.png",
+            "image_prompt": "The car transforms into a race car"
+        },
+        {
+            "image_name": "97.png",
+            "image_prompt": "A hat is placed on the cat's head"
+        },
+        {
+            "image_name": "98.png",
+            "image_prompt": "A person claps their hands"
+        },
+        {
+            "image_name": "99.png",
+            "image_prompt": "The elphant walks into a circus"
+        },
+        {
+            "image_name": "100.png",
+            "image_prompt": "The goat jumps over the cat"
+        }
+    ]
+}

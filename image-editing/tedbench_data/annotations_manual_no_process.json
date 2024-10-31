@@ -1,0 +1,99 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        } 
+    ],
+    "images": [
+        {
+            "image_name": "4.png",
+            "image_prompt": "Closed wings replaced by spread wings"
+        },
+        {
+            "image_name": "38.png",
+            "image_prompt": "A goat transfers to the right of the cat"
+        },
+        {
+            "image_name": "81.png",
+            "image_prompt": "An egg transforms to cracked egg"
+        },
+        {
+            "image_name": "82.png",
+            "image_prompt": "Normal road transformed into post apocalyptic state"
+        },
+        {
+            "image_name": "83.png",
+            "image_prompt": "A Zebra replaced by a horse."
+        },
+        {
+            "image_name": "84.png",
+            "image_prompt": "A 1940s automobile replaces the current car"
+        },
+        {
+            "image_name": "85.png",
+            "image_prompt": "White horse coat replaced with zebra stripes"
+        },
+        {
+            "image_name": "86.png",
+            "image_prompt": "Glass pitcher transformed into a flower pot."
+        },
+        {
+            "image_name": "87.png",
+            "image_prompt": "Cat view transforms to rear view."
+        },
+        {
+            "image_name": "88.png",
+            "image_prompt": "The bear pose transforms to a standing bear pose"
+        },
+        {
+            "image_name": "89.png",
+            "image_prompt": "The horse position transforms to a jumping pose"
+        },
+        {
+            "image_name": "90.png",
+            "image_prompt": "The dogs' faces are replaced by growling expressions toward each other."
+        },
+        {
+            "image_name": "91.png",
+            "image_prompt": "A smoking cigar apears in the dog's mouth"
+        },
+        {
+            "image_name": "92.png",
+            "image_prompt": "The teddy bear's sitting pose changes to a standing pose."
+        },
+        {
+            "image_name": "93.png",
+            "image_prompt": "The giraffe's pose pose changes to a siting pose."
+        },
+        {
+            "image_name": "94.png",
+            "image_prompt": "The teddy bear is apears torn up"
+        },
+        {
+            "image_name": "95.png",
+            "image_prompt": "The snow is replaced by a grass field"
+        },
+        {
+            "image_name": "96.png",
+            "image_prompt": "The car transforms into a race car"
+        },
+        {
+            "image_name": "97.png",
+            "image_prompt": "The cat's bare head is replaced by a hat"
+        },
+        {
+            "image_name": "98.png",
+            "image_prompt": "The resting hands are replaced by clapping hands"
+        },
+        {
+            "image_name": "99.png",
+            "image_prompt": "The field turns into a circus"
+        },
+        {
+            "image_name": "100.png",
+            "image_prompt": "The goat's standing position changes to one where it jumps over the cat"
+        }
+    ]
+}
