@@ -130,9 +130,9 @@ def setup_llava_model() -> Tuple[LlavaNextForConditionalGeneration, LlavaNextPro
     Returns:
         Tuple of (model, processor)
     """
-    processor = LlavaNextProcessor.from_pretrained("llava-v1.6-vicuna-7b-hf")
+    processor = LlavaNextProcessor.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf")
     model = LlavaNextForConditionalGeneration.from_pretrained(
-        "llava-v1.6-vicuna-7b-hf",
+        "llava-hf/llava-v1.6-mistral-7b-hf",
         torch_dtype=torch.float16,
         low_cpu_mem_usage=True
     )
