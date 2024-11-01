@@ -24,10 +24,18 @@ class ImageProcessingLog:
     image_prompt: str
     llava_prompt: str | None = None
     llava_output: str | None = None
-    llama_role: str | None = None
-    llama_prompt: str | None = None
-    llama_output: str | None = None
     final_prompt: str | None = None
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        """Allow dynamic addition of Llama-specific attributes."""
+        if not hasattr(self, name):
+            # Create new field dynamically
+            self.__dict__[name] = value
+            # Add field to dataclass fields
+            field = dataclasses.field(default=None)
+            self.__class__.__dataclass_fields__[name] = field
+        else:
+            super().__setattr__(name, value)
 
 
 def split_into_groups(items: List[Any], num_groups: int) -> List[List[Any]]:
@@ -122,9 +130,9 @@ def setup_llava_model() -> Tuple[LlavaNextForConditionalGeneration, LlavaNextPro
     Returns:
         Tuple of (model, processor)
     """
-    processor = LlavaNextProcessor.from_pretrained("llava-hf/llava-v1.6-mistral-7b-hf")
+    processor = LlavaNextProcessor.from_pretrained("llava-v1.6-vicuna-7b-hf")
     model = LlavaNextForConditionalGeneration.from_pretrained(
-        "llava-hf/llava-v1.6-mistral-7b-hf",
+        "llava-v1.6-vicuna-7b-hf",
         torch_dtype=torch.float16,
         low_cpu_mem_usage=True
     )
@@ -383,7 +391,7 @@ def process_videos(annotations_path: str,
     all_settings = annotations.get("settings", [])
 
     # Check if we need Llama and LLaVA models
-    needs_llama = any("llama" in setting for setting in all_settings)
+    needs_llama = any(any(key.startswith("llama") for key in setting.keys()) for setting in all_settings)
     needs_llava = any("llava" in setting for setting in all_settings)
 
     llama_pipe = None
@@ -430,11 +438,12 @@ def process_videos(annotations_path: str,
 
     def replace_placeholders(text: str, context: Dict[str, str]) -> str:
         """Replace placeholders in text with their values from context."""
-        for key, value in context.items():
+        result = text
+        for key, value in sorted(context.items(), key=lambda x: len(x[0]), reverse=True):
             placeholder = f"${{{key}}}"
-            if placeholder in text:
-                text = text.replace(placeholder, value)
-        return text
+            if placeholder in result:
+                result = result.replace(placeholder, value)
+        return result
 
     # Process each setting
     for setting_idx, setting in enumerate(all_settings):
@@ -481,25 +490,36 @@ def process_videos(annotations_path: str,
                     context["llava_output"] = llava_caption
                     image_log.llava_output = llava_caption
 
-                # Process with Llama if specified in settings
-                if "llama" in setting and llama_pipe is not None:
-                    llama_config = setting["llama"]
-                    llama_prompt = replace_placeholders(llama_config["prompt"], context)
-                    image_log.llama_prompt = llama_prompt
-                    image_log.llama_role = llama_config["role"]
+                # Process with multiple Llama runs if specified in settings
+                llama_keys = sorted([k for k in setting.keys() if k.startswith("llama")],
+                                    key=lambda x: int(x[5:]) if x[5:].isdigit() else float('inf'))
 
-                    llama_output = get_video_prompt(
-                        llama_pipe=llama_pipe,
-                        original_prompt=llama_prompt,
-                        role=llama_config["role"],
-                        max_new_tokens=max_new_tokens,
-                        temperature=temperature,
-                        top_p=top_p,
-                        do_sample=do_sample
-                    )
-                    print(f"    Llama output: {llama_output}")
-                    context["llama_output"] = llama_output
-                    image_log.llama_output = llama_output
+                for llama_key in llama_keys:
+                    if llama_pipe is not None:
+                        config = setting[llama_key]
+                        print(f"    Running {llama_key}")
+
+                        llama_prompt = replace_placeholders(config["prompt"], context)
+
+                        # Store prompt in log with the specific index
+                        setattr(image_log, f"{llama_key}_prompt", llama_prompt)
+                        setattr(image_log, f"{llama_key}_role", config["role"])
+
+                        llama_output = get_video_prompt(
+                            llama_pipe=llama_pipe,
+                            original_prompt=llama_prompt,
+                            role=config["role"],
+                            max_new_tokens=max_new_tokens,
+                            temperature=temperature,
+                            top_p=top_p,
+                            do_sample=do_sample
+                        )
+                        print(f"    {llama_key} output: {llama_output}")
+
+                        # Store output in context with specific key
+                        context[f"{llama_key}_output"] = llama_output
+                        # Store output in log with specific key
+                        setattr(image_log, f"{llama_key}_output", llama_output)
 
                 # Get final prompt for CogVideo
                 if "cog" not in setting:
@@ -512,13 +532,13 @@ def process_videos(annotations_path: str,
                 # Update processing log
                 update_processing_log(log_path, image_log)
 
-                # Prepare image for CogVideoX
+                # Prepare image for CogVideoX if not done already
                 if "processed_image" not in context:
                     image_path = os.path.join(images_dir, entry['image_name'])
                     processed_image = resize_and_pad_image(image_path)
                     context["processed_image"] = processed_image
 
-                # Generate videos
+                # Generate videos with different seeds and guidance scales
                 variant_count = 0
                 for seed in seeds:
                     for guidance_scale in guidance_scales:
@@ -572,8 +592,6 @@ def main() -> None:
                         help='Disable sampling in Llama generation (use greedy decoding)')
     parser.add_argument('--llama_seed', type=int, default=None,
                         help='Seed for Llama text generation (optional)')
-
-    # Add new arguments for group processing
     parser.add_argument('--num_groups', type=int, default=None,
                         help='Number of groups to split images into')
     parser.add_argument('--group_index', type=int, default=None,
@@ -590,10 +608,6 @@ def main() -> None:
     if args.num_groups is not None and args.group_index is not None:
         if args.group_index >= args.num_groups:
             parser.error(f"Group index must be less than number of groups (0 to {args.num_groups - 1})")
-
-    # Create run directory and save configuration
-    run_dir = setup_run_directories(args.output_dir)
-    save_run_config(run_dir, args)
 
     process_videos(
         annotations_path=args.annotations,
