@@ -1,10 +1,14 @@
 {
     "settings": [
         {
-            "cog": {
+            "llama": {
+                "role": "Your job is to remove the 'A photo of' part (or a similar one) from the given prompt.",
                 "prompt": "${image_prompt}"
+            },
+            "cog": {
+                "prompt": "${llama_output}"
             }
-        } 
+        }
     ],
     "images": [
         {
