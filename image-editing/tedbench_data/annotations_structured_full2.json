@@ -1,26 +1,10 @@
 {
     "settings": [
         {
-            "llava": {
-                "prompt": "Describe the image using a single sentence."
-            },
-            "llama": {
-                "role": "You are a helpful assistent. Your job is to generate clear and concise desription of how a source video scene state transition into a target video scene state. Output only the description, do not output anything else.",
-                "prompt": "The source state is quoted by '${llava_output}', the target state is quoted by '${image_prompt}'."
-            },
             "cog": {
-                "prompt": "${llama_output}"
-            }
-        },
-        {
-            "llama": {
-                "role": "Your job is to remove the 'A photo of' part (or a similar one) from the given prompt.",
                 "prompt": "${image_prompt}"
-            },
-            "cog": {
-                "prompt": "${llama_output}"
             }
-        } 
+        }
     ],
     "images": [
         {
