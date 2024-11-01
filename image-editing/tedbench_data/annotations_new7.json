@@ -10,7 +10,7 @@
             },
             "llama2": {
                 "role": "You are a helpful assistent. Your job is to generate clear and short desription of how a video has to unfold, given source and target states. Output only the description, do not output anything else. Keep the output short!",
-                "prompt": "Given that the source state is quoted by '${llava_output}' and that the target state is quoted by '${llama1_output}', describe how the video unfold into the target state. Do not instruct to move the camera."
+                "prompt": "Given that the source state is quoted by '${llava_output}' and that the target state is quoted by '${llama1_output}', describe how the video transitions into the target state. Do not instruct to move the camera. Focus only on visuals, do not describe sounds."
             },
             "cog": {
                 "prompt": "${llama2_output}"
