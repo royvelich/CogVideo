@@ -115,13 +115,10 @@ def update_processing_log(log_path: str, image_log: ImageProcessingLog) -> None:
     else:
         log_data = {}
 
-    # Create a dictionary with all attributes, including dynamically added ones
+    # Create a dictionary directly from all dataclass fields
     log_entry = {
-        # Start with the standard dataclass fields
-        **dataclasses.asdict(image_log),
-        # Add any additional attributes from __dict__ that aren't in the dataclass fields
-        **{k: v for k, v in image_log.__dict__.items()
-           if k not in image_log.__dataclass_fields__}
+        field_name: getattr(image_log, field_name)
+        for field_name in image_log.__dataclass_fields__
     }
 
     # Update log with new image data
