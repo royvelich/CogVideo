@@ -1,0 +1,51 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        }
+    ],
+    "images": [
+        {
+            "image_name": "1.png",
+            "image_prompt": "Saw the chair in half."
+        },
+        {
+            "image_name": "2.png",
+            "image_prompt": "Place the cat in a grass field."
+        },
+        {
+            "image_name": "3.png",
+            "image_prompt": "Make the horse look like a circus horse."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "Spread the wings of the bird."
+        },
+        {
+            "image_name": "5.png",
+            "image_prompt": "Make the dog to do a breakdance."
+        },
+        {
+            "image_name": "6.png",
+            "image_prompt": "Open the door."
+        },
+        {
+            "image_name": "7.png",
+            "image_prompt": "Make the cat fall asleep."
+        },
+        {
+            "image_name": "8.png",
+            "image_prompt": "Show a bowl of apples."
+        },
+        {
+            "image_name": "9.png",
+            "image_prompt": "Make the bear eat a fish."
+        },
+        {
+            "image_name": "10.png",
+            "image_prompt": "Make the giraffe eat the grass below."
+        },
+    ]
+}
