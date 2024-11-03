@@ -1,0 +1,35 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        }
+    ],
+    "images": [
+        {
+            "image_name": "1.png",
+            "image_prompt": "Transform the chair into a chair sawed in half."
+        },
+        {
+            "image_name": "2.png",
+            "image_prompt": "Transform the cat into a cat in a green grass field."
+        },
+        {
+            "image_name": "3.png",
+            "image_prompt": "Transform the horse into a circus horse."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "Transform the bird into a bird spreading its wings."
+        },
+        {
+            "image_name": "5.png",
+            "image_prompt": "Transform the dog into a breakdancing dog."
+        },
+        {
+            "image_name": "6.png",
+            "image_prompt": "Transform the door into an open door"
+        }
+    ]
+}
