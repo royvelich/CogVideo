@@ -1,0 +1,31 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        }
+    ],
+    "images": [
+        {
+            "image_name": "4.png",
+            "image_prompt": "A bird spreading its wings."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "A bird gradually spread its wings."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "The bird gradually spread its wings."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "The bird gradually spread its wings until they were fully open."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "The bird gradually spread its wings to their full span."
+        }
+    ]
+}
