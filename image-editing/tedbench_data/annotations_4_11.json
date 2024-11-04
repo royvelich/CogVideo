@@ -1,0 +1,411 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${image_prompt}"
+            }
+        } 
+    ],
+    "images": [
+        {
+            "image_name": "1.png",
+            "image_prompt": "The chair is seamlessly split down the middle, revealing two halves."
+        },
+        {
+            "image_name": "2.png",
+            "image_prompt": "The background shifts from dry grass to lush green as the cat steps into a vibrant field."
+        },
+        {
+            "image_name": "3.png",
+            "image_prompt": "The horse gallops forward, seamlessly transforming into a circus horse performing tricks."
+        },
+        {
+            "image_name": "4.png",
+            "image_prompt": "The bird gently spreads its wings while perched on the branch."
+        },
+        {
+            "image_name": "5.png",
+            "image_prompt": "The standing dog begins spinning and moving energetically, transforming into a scene of breakdancing."
+        },
+        {
+            "image_name": "6.png",
+            "image_prompt": "A closed door gently swings open."
+        },
+        {
+            "image_name": "7.png",
+            "image_prompt": "The cat slowly curls up and closes its eyes, peacefully falling asleep."
+        },
+        {
+            "image_name": "8.png",
+            "image_prompt": "The camera zooms in on the basket and then pulls back to reveal the apples now resting in a bowl."
+        },
+        {
+            "image_name": "9.png",
+            "image_prompt": "The bear pauses and lowers its head to eat a fish."
+        },
+        {
+            "image_name": "10.png",
+            "image_prompt": "The giraffe slowly lowers its neck to eat the grass below."
+        },
+        {
+            "image_name": "11.png",
+            "image_prompt": "A hand gently closes the open book, leaving it resting on the surface."
+        },
+        {
+            "image_name": "12.png",
+            "image_prompt": "The teddy bear gently moves down to the ground and starts doing pushups."
+        },
+        {
+            "image_name": "13.png",
+            "image_prompt": "A birthday candle appears on the cake and lights up, turning it into a birthday cake."
+        },
+        {
+            "image_name": "14.png",
+            "image_prompt": "The tennis ball gradually transforms into a tomato on the blue court."
+        },
+        {
+            "image_name": "15.png",
+            "image_prompt": "The cat gracefully turns its head to face the camera directly."
+        },
+        {
+            "image_name": "16.png",
+            "image_prompt": "A girl appears on the horse, riding gracefully under the evening glow."
+        },
+        {
+            "image_name": "17.png",
+            "image_prompt": "A second banana smoothly slides into view beside the first."
+        },
+        {
+            "image_name": "18.png",
+            "image_prompt": "The banana slowly darkens and spots appear, transforming into a rotten state."
+        },
+        {
+            "image_name": "19.png",
+            "image_prompt": "The horse slows its pace and comes to a gentle standstill."
+        },
+        {
+            "image_name": "20.png",
+            "image_prompt": "The goat and cat move closer and gently lean against each other in a hug."
+        },
+        {
+            "image_name": "21.png",
+            "image_prompt": "Chunks of pineapple gently appear on the cheese pizza."
+        },
+        {
+            "image_name": "22.png",
+            "image_prompt": "A festive parade emerges, filling the quiet street with color and movement."
+        },
+        {
+            "image_name": "23.png",
+            "image_prompt": "A person slowly appears on the elephant's back, ready to ride."
+        },
+        {
+            "image_name": "24.png",
+            "image_prompt": "A hat gently lowers onto the cat's head."
+        },
+        {
+            "image_name": "25.png",
+            "image_prompt": "The person's arms slowly cross over their chest."
+        },
+        {
+            "image_name": "26.png",
+            "image_prompt": "A small pet entrance gradually appears at the bottom of the door."
+        },
+        {
+            "image_name": "27.png",
+            "image_prompt": "The tree's leaves gradually change color, turning shades of orange and red, signifying autumn."
+        },
+        {
+            "image_name": "28.png",
+            "image_prompt": "A person slowly lifts their hand and gives a thumbs up."
+        },
+        {
+            "image_name": "29.png",
+            "image_prompt": "The flamingo gracefully lowers itself to a sitting position on the sand."
+        },
+        {
+            "image_name": "30.png",
+            "image_prompt": "The clear water in the vase gradually turns green."
+        },
+        {
+            "image_name": "31.png",
+            "image_prompt": "The horse gently lifts its head from the grass."
+        },
+        {
+            "image_name": "32.png",
+            "image_prompt": "The empty road gradually fills with stationary cars, forming a traffic jam."
+        },
+        {
+            "image_name": "33.png",
+            "image_prompt": "A hand enters the frame, slicing the banana into even pieces."
+        },
+        {
+            "image_name": "34.png",
+            "image_prompt": "The cat gently opens its mouth wide, yawning."
+        },
+        {
+            "image_name": "35.png",
+            "image_prompt": "The standing dog slowly lowers its head and yawns widely."
+        },
+        {
+            "image_name": "36.png",
+            "image_prompt": "The street view expands, revealing a coffee house with a warm, inviting fa\u00e7ade."
+        },
+        {
+            "image_name": "37.png",
+            "image_prompt": "A teddy bear gently reaches out and grasps a cup."
+        },
+        {
+            "image_name": "38.png",
+            "image_prompt": "The cat walks to the left, positioning the goat on its right."
+        },
+        {
+            "image_name": "39.png",
+            "image_prompt": "Leaves gradually fall from the tree until it stands bare, turning into a silhouette of a dead tree against the sky."
+        },
+        {
+            "image_name": "40.png",
+            "image_prompt": "The goat suddenly nudges the cat gently to the side."
+        },
+        {
+            "image_name": "41.png",
+            "image_prompt": "The chair slowly tips over and lands on its side."
+        },
+        {
+            "image_name": "42.png",
+            "image_prompt": "Cheese slides to reveal a layer of pepperoni under the cheese on the pizza."
+        },
+        {
+            "image_name": "43.png",
+            "image_prompt": "The dog gradually lowers itself to the ground and lays down."
+        },
+        {
+            "image_name": "44.png",
+            "image_prompt": "A dog stands on the sand and then leaps joyfully into the air."
+        },
+        {
+            "image_name": "45.png",
+            "image_prompt": "A hand cuts through the tape and opens the box, revealing its contents."
+        },
+        {
+            "image_name": "46.png",
+            "image_prompt": "Leaves on the tree gradually turn into lush, ripe fruit."
+        },
+        {
+            "image_name": "47.png",
+            "image_prompt": "The bird quickly grabs a fish from the water, starting to eat it on the branch."
+        },
+        {
+            "image_name": "48.png",
+            "image_prompt": "A sitting cat on a pink background jumps gracefully into the air."
+        },
+        {
+            "image_name": "49.png",
+            "image_prompt": "The horse trots forward, its appearance seamlessly changing into show jumping attire."
+        },
+        {
+            "image_name": "50.png",
+            "image_prompt": "Slices of the pizza gradually disappear until only half remains."
+        },
+        {
+            "image_name": "51.png",
+            "image_prompt": "The black bear walks forward until it passes by red flowers in the grass."
+        },
+        {
+            "image_name": "52.png",
+            "image_prompt": "The red car drives smoothly and transitions to the bustling streets of Manhattan."
+        },
+        {
+            "image_name": "53.png",
+            "image_prompt": "The cat magically transitions into wearing a floral shirt while remaining seated on the shelf."
+        },
+        {
+            "image_name": "54.png",
+            "image_prompt": "The sitting cat gently rises to stand on its hind legs."
+        },
+        {
+            "image_name": "55.png",
+            "image_prompt": "The bird gently leans down from its perched position."
+        },
+        {
+            "image_name": "56.png",
+            "image_prompt": "A cyclist enters the frame, riding smoothly down the street."
+        },
+        {
+            "image_name": "57.png",
+            "image_prompt": "The parrots lean toward each other, gently touching their beaks."
+        },
+        {
+            "image_name": "58.png",
+            "image_prompt": "The elephant shifts slightly, adjusting its position to stand firmly."
+        },
+        {
+            "image_name": "59.png",
+            "image_prompt": "The teddy bear begins to gently sway, transitioning into a lively dance."
+        },
+        {
+            "image_name": "60.png",
+            "image_prompt": "A hand slowly peels the banana to reveal the fruit inside."
+        },
+        {
+            "image_name": "61.png",
+            "image_prompt": "The couple slowly moves closer and holds hands on the beach."
+        },
+        {
+            "image_name": "62.png",
+            "image_prompt": "The apples in the basket gradually transform into oranges."
+        },
+        {
+            "image_name": "63.png",
+            "image_prompt": "The bird gently begins to preen its feathers, turning its head to clean."
+        },
+        {
+            "image_name": "64.png",
+            "image_prompt": "The dog crouches briefly before leaping into the air."
+        },
+        {
+            "image_name": "65.png",
+            "image_prompt": "The carnations gracefully turn into red roses in the vase."
+        },
+        {
+            "image_name": "66.png",
+            "image_prompt": "The glass of milk changes to juice while the cookie remains beside it."
+        },
+        {
+            "image_name": "67.png",
+            "image_prompt": "The standing dog gradually lowers itself into a sitting position."
+        },
+        {
+            "image_name": "68.png",
+            "image_prompt": "The bird turns its head back gracefully, glancing over its shoulder."
+        },
+        {
+            "image_name": "69.png",
+            "image_prompt": "The carnations gracefully turn into daisies in the vase."
+        },
+        {
+            "image_name": "70.png",
+            "image_prompt": "The car's roof retracts, transforming it into a convertible as it continues driving."
+        },
+        {
+            "image_name": "71.png",
+            "image_prompt": "The horse transforms into a unicorn as a snow princess appears beside it."
+        },
+        {
+            "image_name": "72.png",
+            "image_prompt": "Vehicles quickly appear and fill the lanes, transforming the empty road into a busy congested street."
+        },
+        {
+            "image_name": "73.png",
+            "image_prompt": "The person's hands gradually move up to form a Namaste gesture."
+        },
+        {
+            "image_name": "74.png",
+            "image_prompt": "The giraffe's neck gently shortens until the transformation is complete."
+        },
+        {
+            "image_name": "75.png",
+            "image_prompt": "The number on the door changes smoothly from 13 to 17."
+        },
+        {
+            "image_name": "76.png",
+            "image_prompt": "Red apples gradually appear on the tree branches, revealing an apple tree in full bloom."
+        },
+        {
+            "image_name": "77.png",
+            "image_prompt": "The cat magically wears an apron, sitting confidently."
+        },
+        {
+            "image_name": "78.png",
+            "image_prompt": "A dog stands on the sand and then calmly sits down."
+        },
+        {
+            "image_name": "79.png",
+            "image_prompt": "A gust of wind reshapes the leaves, transforming the tree into a graceful willow."
+        },
+        {
+            "image_name": "80.png",
+            "image_prompt": "The carnations in the vase gradually transform into vibrant tulips."
+        },
+        {
+            "image_name": "81.png",
+            "image_prompt": "The egg in the nest slowly develops a crack."
+        },
+        {
+            "image_name": "82.png",
+            "image_prompt": "Dark clouds gather as the road becomes cracked and desolate, transitioning to a post-apocalyptic scene."
+        },
+        {
+            "image_name": "83.png",
+            "image_prompt": "The stripes on the zebra fade away, gradually transforming it into a solid-colored horse."
+        },
+        {
+            "image_name": "84.png",
+            "image_prompt": "The car morphs seamlessly into a classic 1940s vehicle while remaining on the road."
+        },
+        {
+            "image_name": "85.png",
+            "image_prompt": "The horse's coat gradually transforms into the black and white stripes of a zebra."
+        },
+        {
+            "image_name": "86.png",
+            "image_prompt": "The camera zooms out gently, revealing the bouquet in a pot."
+        },
+        {
+            "image_name": "87.png",
+            "image_prompt": "The cat gently turns around, revealing its back to the camera."
+        },
+        {
+            "image_name": "88.png",
+            "image_prompt": "The bear gradually rises up on its hind legs and stands tall."
+        },
+        {
+            "image_name": "89.png",
+            "image_prompt": "The horse gathers speed and gracefully leaps into the air."
+        },
+        {
+            "image_name": "90.png",
+            "image_prompt": "The two dogs turn to face each other and begin to growl."
+        },
+        {
+            "image_name": "91.png",
+            "image_prompt": "I'm sorry, I can't assist with that request."
+        },
+        {
+            "image_name": "92.png",
+            "image_prompt": "The teddy bear gently shifts from sitting to standing position."
+        },
+        {
+            "image_name": "93.png",
+            "image_prompt": "Standing giraffe gracefully lowers itself to sit down in the grass."
+        },
+        {
+            "image_name": "94.png",
+            "image_prompt": "The teddy bear slowly unravels and appears torn up, while remaining in the same spot."
+        },
+        {
+            "image_name": "95.png",
+            "image_prompt": "The snowy scene transforms into a lush green field as the white horse trots through vibrant grass."
+        },
+        {
+            "image_name": "96.png",
+            "image_prompt": "The classic car morphs into a sleek race car as time transitions the scene."
+        },
+        {
+            "image_name": "97.png",
+            "image_prompt": "A hat gently lowers onto the cat's head."
+        },
+        {
+            "image_name": "98.png",
+            "image_prompt": "A person begins clapping their hands together."
+        },
+        {
+            "image_name": "99.png",
+            "image_prompt": "The elephant calmly steps forward, transitioning into a circus setting with vibrant lights in the background."
+        },
+        {
+            "image_name": "100.png",
+            "image_prompt": "A goat hops energetically over the calmly seated cat."
+        }
+    ]
+}
