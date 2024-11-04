@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 from PIL import Image
 import torch
@@ -94,7 +95,21 @@ def save_run_config(run_dir: str, args: argparse.Namespace) -> None:
         run_dir: Run directory path
         args: Command line arguments
     """
-    config = {k: v for k, v in vars(args).items()}
+    # Convert arguments to dictionary
+    config = {
+        "command_line_args": vars(args),
+        "execution_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "python_command": f"python {' '.join(sys.argv)}",
+        "environment": {
+            "python_version": sys.version,
+            "torch_version": torch.__version__,
+            "cuda_available": torch.cuda.is_available(),
+            "cuda_device_count": torch.cuda.device_count() if torch.cuda.is_available() else 0,
+            "cuda_devices": [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())] if torch.cuda.is_available() else []
+        }
+    }
+
+    # Save configuration
     config_path = os.path.join(run_dir, "run_config.json")
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
@@ -372,7 +387,7 @@ def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) 
 
 def process_videos(annotations_path: str,
                    images_dir: str,
-                   output_dir: str,
+                   run_dir: str,
                    seeds: List[int],
                    guidance_scales: List[float],
                    max_new_tokens: int,
@@ -386,9 +401,6 @@ def process_videos(annotations_path: str,
     """
     Process images to videos using CogVideoX based on annotations.
     """
-    # Create run directory structure
-    run_dir = setup_run_directories(output_dir)
-
     # Load annotations
     with open(annotations_path, 'r') as f:
         annotations = json.load(f)
@@ -615,10 +627,16 @@ def main() -> None:
         if args.group_index >= args.num_groups:
             parser.error(f"Group index must be less than number of groups (0 to {args.num_groups - 1})")
 
+    # Create run directory
+    run_dir = setup_run_directories(args.output_dir)
+
+    # Save run configuration
+    save_run_config(run_dir, args)
+
     process_videos(
         annotations_path=args.annotations,
         images_dir=args.images_dir,
-        output_dir=args.output_dir,
+        run_dir=run_dir,
         seeds=args.seeds,
         guidance_scales=args.guidance_scales,
         max_new_tokens=args.max_new_tokens,
