@@ -373,9 +373,15 @@ def process_videos(annotations_path: str,
     all_settings = annotations.get("settings", [])
     all_images = annotations.get("images", [])
 
-    # Find the maximum number of prompts across all images
-    num_prompts = max(len(img['video_prompts']) for img in all_images)
-    print(f"Maximum number of prompts per image: {num_prompts}")
+    # Find the most common number of prompts across all images
+    prompt_counts = {}
+    for img in all_images:
+        num = len(img['video_prompts'])
+        prompt_counts[num] = prompt_counts.get(num, 0) + 1
+
+    num_prompts = max(prompt_counts.items(), key=lambda x: x[1])[0]
+    print(f"Most common number of prompts per image: {num_prompts} (occurs in {prompt_counts[num_prompts]} images)")
+    print(f"Number of prompts distribution: {prompt_counts}")
 
     # Check if we need Llama and LLaVA models
     needs_llama = any(any(key.startswith("llama") for key in setting.keys()) for setting in all_settings)
