@@ -365,19 +365,19 @@ def process_videos(annotations_path: str,
     """
     Process images to videos using CogVideoX based on annotations.
     """
-    # Load annotations and setup (same as before)
+    # Load annotations
     with open(annotations_path, 'r') as f:
         annotations = json.load(f)
 
+    # Setup models only if needed
     all_settings = annotations.get("settings", [])
     all_images = annotations.get("images", [])
 
-    # Validate that all images have the same number of prompts
-    num_prompts = len(all_images[0]['video_prompts'])
-    if not all(len(img['video_prompts']) == num_prompts for img in all_images):
-        raise ValueError("All images must have the same number of video prompts")
+    # Find the maximum number of prompts across all images
+    num_prompts = max(len(img['video_prompts']) for img in all_images)
+    print(f"Maximum number of prompts per image: {num_prompts}")
 
-    # Setup models only if needed
+    # Check if we need Llama and LLaVA models
     needs_llama = any(any(key.startswith("llama") for key in setting.keys()) for setting in all_settings)
     needs_llava = any("llava" in setting for setting in all_settings)
 
@@ -410,7 +410,7 @@ def process_videos(annotations_path: str,
         images = all_images
         image_groups = [all_images]
 
-    # Save group information (same as before)
+    # Save group information
     group_info = {
         "total_images": len(all_images),
         "num_groups": num_groups,
@@ -438,19 +438,27 @@ def process_videos(annotations_path: str,
         os.makedirs(setting_dir, exist_ok=True)
         log_path = os.path.join(setting_dir, "processing_log.json")
 
-        # New loop order: seeds -> prompt_indices -> guidance_scales -> images
+        # Loops: seeds -> prompt_indices -> guidance_scales -> images
         for seed in seeds:
             print(f"Processing seed {seed}")
 
             for prompt_idx in range(num_prompts):
                 print(f"  Processing prompt index {prompt_idx + 1}/{num_prompts}")
 
-                for guidance_scale in guidance_scales:
-                    print(f"    Processing guidance scale {guidance_scale}")
+                # Filter images that have enough prompts for this prompt_idx
+                valid_images = [img for img in images if len(img['video_prompts']) > prompt_idx]
+                if not valid_images:
+                    print(f"    No images have {prompt_idx + 1} prompts, skipping this prompt index")
+                    continue
 
-                    for idx, entry in enumerate(images):
+                print(f"    Found {len(valid_images)} images with prompt index {prompt_idx}")
+
+                for guidance_scale in guidance_scales:
+                    print(f"      Processing guidance scale {guidance_scale}")
+
+                    for idx, entry in enumerate(valid_images):
                         try:
-                            print(f"      Processing image {idx + 1}/{len(images)}")
+                            print(f"        Processing image {idx + 1}/{len(valid_images)}")
                             base_name = os.path.splitext(entry['image_name'])[0]
                             video_prompt = entry['video_prompts'][prompt_idx]
 
@@ -480,7 +488,7 @@ def process_videos(annotations_path: str,
                                     processor=llava_processor,
                                     prompt=llava_config["prompt"]
                                 )
-                                print(f"        LLaVA caption: {llava_caption}")
+                                print(f"          LLaVA caption: {llava_caption}")
                                 context["llava_output"] = llava_caption
                                 image_log.llava_output = llava_caption
 
@@ -491,7 +499,7 @@ def process_videos(annotations_path: str,
                             for llama_key in llama_keys:
                                 if llama_pipe is not None:
                                     config = setting[llama_key]
-                                    print(f"        Running {llama_key}")
+                                    print(f"          Running {llama_key}")
 
                                     llama_prompt = replace_placeholders(config["prompt"], context)
                                     setattr(image_log, f"{llama_key}_prompt", llama_prompt)
@@ -506,7 +514,7 @@ def process_videos(annotations_path: str,
                                         top_p=top_p,
                                         do_sample=do_sample
                                     )
-                                    print(f"        {llama_key} output: {llama_output}")
+                                    print(f"          {llama_key} output: {llama_output}")
 
                                     context[f"{llama_key}_output"] = llama_output
                                     setattr(image_log, f"{llama_key}_output", llama_output)
@@ -516,7 +524,7 @@ def process_videos(annotations_path: str,
                                 raise ValueError(f"Setting {setting_idx} missing required 'cog' configuration")
 
                             final_prompt = replace_placeholders(setting["cog"]["prompt"], context)
-                            print(f"        Final prompt: {final_prompt}")
+                            print(f"          Final prompt: {final_prompt}")
                             image_log.final_prompt = final_prompt
 
                             # Update processing log
@@ -547,7 +555,7 @@ def process_videos(annotations_path: str,
                             extract_frames(video_frames, base_path)
 
                         except Exception as e:
-                            print(f"Error processing entry {idx}: {str(e)}")
+                            print(f"Error processing entry {idx} ({entry['image_name']}): {str(e)}")
                             continue
 
 
