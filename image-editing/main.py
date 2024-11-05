@@ -365,14 +365,19 @@ def process_videos(annotations_path: str,
     """
     Process images to videos using CogVideoX based on annotations.
     """
-    # Load annotations
+    # Load annotations and setup (same as before)
     with open(annotations_path, 'r') as f:
         annotations = json.load(f)
 
-    # Setup models only if needed
     all_settings = annotations.get("settings", [])
+    all_images = annotations.get("images", [])
 
-    # Check if we need Llama and LLaVA models
+    # Validate that all images have the same number of prompts
+    num_prompts = len(all_images[0]['video_prompts'])
+    if not all(len(img['video_prompts']) == num_prompts for img in all_images):
+        raise ValueError("All images must have the same number of video prompts")
+
+    # Setup models only if needed
     needs_llama = any(any(key.startswith("llama") for key in setting.keys()) for setting in all_settings)
     needs_llava = any("llava" in setting for setting in all_settings)
 
@@ -395,7 +400,6 @@ def process_videos(annotations_path: str,
     cog_pipe.vae.enable_tiling()
 
     # Handle group processing
-    all_images = annotations.get("images", [])
     if num_groups is not None and group_index is not None:
         image_groups = split_into_groups(all_images, num_groups)
         if not 0 <= group_index < num_groups:
@@ -406,7 +410,7 @@ def process_videos(annotations_path: str,
         images = all_images
         image_groups = [all_images]
 
-    # Save group information
+    # Save group information (same as before)
     group_info = {
         "total_images": len(all_images),
         "num_groups": num_groups,
@@ -430,104 +434,101 @@ def process_videos(annotations_path: str,
     # Process each setting
     for setting_idx, setting in enumerate(all_settings):
         print(f"Processing setting {setting_idx + 1}/{len(all_settings)}")
-
         setting_dir = os.path.join(run_dir, f"setting_{setting_idx}")
         os.makedirs(setting_dir, exist_ok=True)
         log_path = os.path.join(setting_dir, "processing_log.json")
 
-        # Process each image
-        for idx, entry in enumerate(images):
-            try:
-                print(f"  Processing image {idx + 1}/{len(images)}")
-                base_name = os.path.splitext(entry['image_name'])[0]
+        # New loop order: seeds -> prompt_indices -> guidance_scales -> images
+        for seed in seeds:
+            print(f"Processing seed {seed}")
 
-                # Process each video prompt
-                for prompt_idx, video_prompt in enumerate(entry['video_prompts']):
-                    print(f"    Processing prompt {prompt_idx + 1}/{len(entry['video_prompts'])}")
+            for prompt_idx in range(num_prompts):
+                print(f"  Processing prompt index {prompt_idx + 1}/{num_prompts}")
 
-                    image_log = ImageProcessingLog(
-                        image_name=entry['image_name'],
-                        video_prompts=entry['video_prompts'],
-                        prompt_index=prompt_idx
-                    )
+                for guidance_scale in guidance_scales:
+                    print(f"    Processing guidance scale {guidance_scale}")
 
-                    context = {
-                        "video_prompt": video_prompt
-                    }
+                    for idx, entry in enumerate(images):
+                        try:
+                            print(f"      Processing image {idx + 1}/{len(images)}")
+                            base_name = os.path.splitext(entry['image_name'])[0]
+                            video_prompt = entry['video_prompts'][prompt_idx]
 
-                    # Run LLaVA if specified in settings
-                    if "llava" in setting and llava_model is not None:
-                        llava_config = setting["llava"]
-                        image_log.llava_prompt = llava_config["prompt"]
-
-                        image_path = os.path.join(images_dir, entry['image_name'])
-                        image = Image.open(image_path)
-                        if image.mode != 'RGB':
-                            image = image.convert('RGB')
-
-                        llava_caption = get_image_caption(
-                            image=image,
-                            model=llava_model,
-                            processor=llava_processor,
-                            prompt=llava_config["prompt"]
-                        )
-                        print(f"      LLaVA caption: {llava_caption}")
-                        context["llava_output"] = llava_caption
-                        image_log.llava_output = llava_caption
-
-                    # Process with multiple Llama runs if specified in settings
-                    llama_keys = sorted([k for k in setting.keys() if k.startswith("llama")],
-                                        key=lambda x: int(x[5:]) if x[5:].isdigit() else float('inf'))
-
-                    for llama_key in llama_keys:
-                        if llama_pipe is not None:
-                            config = setting[llama_key]
-                            print(f"      Running {llama_key}")
-
-                            llama_prompt = replace_placeholders(config["prompt"], context)
-
-                            setattr(image_log, f"{llama_key}_prompt", llama_prompt)
-                            setattr(image_log, f"{llama_key}_role", config["role"])
-
-                            llama_output = get_video_prompt(
-                                llama_pipe=llama_pipe,
-                                original_prompt=llama_prompt,
-                                role=config["role"],
-                                max_new_tokens=max_new_tokens,
-                                temperature=temperature,
-                                top_p=top_p,
-                                do_sample=do_sample
+                            image_log = ImageProcessingLog(
+                                image_name=entry['image_name'],
+                                video_prompts=entry['video_prompts'],
+                                prompt_index=prompt_idx
                             )
-                            print(f"      {llama_key} output: {llama_output}")
 
-                            context[f"{llama_key}_output"] = llama_output
-                            setattr(image_log, f"{llama_key}_output", llama_output)
+                            context = {
+                                "video_prompt": video_prompt
+                            }
 
-                    # Get final prompt for CogVideo
-                    if "cog" not in setting:
-                        raise ValueError(f"Setting {setting_idx} missing required 'cog' configuration")
+                            # Run LLaVA if specified
+                            if "llava" in setting and llava_model is not None:
+                                llava_config = setting["llava"]
+                                image_log.llava_prompt = llava_config["prompt"]
 
-                    final_prompt = replace_placeholders(setting["cog"]["prompt"], context)
-                    print(f"      Final prompt: {final_prompt}")
-                    image_log.final_prompt = final_prompt
+                                image_path = os.path.join(images_dir, entry['image_name'])
+                                image = Image.open(image_path)
+                                if image.mode != 'RGB':
+                                    image = image.convert('RGB')
 
-                    # Update processing log
-                    update_processing_log(log_path, image_log)
+                                llava_caption = get_image_caption(
+                                    image=image,
+                                    model=llava_model,
+                                    processor=llava_processor,
+                                    prompt=llava_config["prompt"]
+                                )
+                                print(f"        LLaVA caption: {llava_caption}")
+                                context["llava_output"] = llava_caption
+                                image_log.llava_output = llava_caption
 
-                    # Prepare image for CogVideoX
-                    if "processed_image" not in context:
-                        image_path = os.path.join(images_dir, entry['image_name'])
-                        processed_image = resize_and_pad_image(image_path)
-                        context["processed_image"] = processed_image
+                            # Process with multiple Llama runs
+                            llama_keys = sorted([k for k in setting.keys() if k.startswith("llama")],
+                                                key=lambda x: int(x[5:]) if x[5:].isdigit() else float('inf'))
 
-                    # Generate videos with different seeds and guidance scales
-                    variant_count = 0
-                    for seed in seeds:
-                        for guidance_scale in guidance_scales:
-                            variant_count += 1
-                            print(f"        Generating variant {variant_count}/{len(seeds) * len(guidance_scales)} "
-                                  f"(seed={seed}, guidance_scale={guidance_scale})")
+                            for llama_key in llama_keys:
+                                if llama_pipe is not None:
+                                    config = setting[llama_key]
+                                    print(f"        Running {llama_key}")
 
+                                    llama_prompt = replace_placeholders(config["prompt"], context)
+                                    setattr(image_log, f"{llama_key}_prompt", llama_prompt)
+                                    setattr(image_log, f"{llama_key}_role", config["role"])
+
+                                    llama_output = get_video_prompt(
+                                        llama_pipe=llama_pipe,
+                                        original_prompt=llama_prompt,
+                                        role=config["role"],
+                                        max_new_tokens=max_new_tokens,
+                                        temperature=temperature,
+                                        top_p=top_p,
+                                        do_sample=do_sample
+                                    )
+                                    print(f"        {llama_key} output: {llama_output}")
+
+                                    context[f"{llama_key}_output"] = llama_output
+                                    setattr(image_log, f"{llama_key}_output", llama_output)
+
+                            # Get final prompt for CogVideo
+                            if "cog" not in setting:
+                                raise ValueError(f"Setting {setting_idx} missing required 'cog' configuration")
+
+                            final_prompt = replace_placeholders(setting["cog"]["prompt"], context)
+                            print(f"        Final prompt: {final_prompt}")
+                            image_log.final_prompt = final_prompt
+
+                            # Update processing log
+                            update_processing_log(log_path, image_log)
+
+                            # Prepare image for CogVideoX
+                            if "processed_image" not in context:
+                                image_path = os.path.join(images_dir, entry['image_name'])
+                                processed_image = resize_and_pad_image(image_path)
+                                context["processed_image"] = processed_image
+
+                            # Generate video
                             video_frames: List[Image.Image] = cog_pipe(
                                 prompt=final_prompt,
                                 image=context["processed_image"],
@@ -545,9 +546,9 @@ def process_videos(annotations_path: str,
                             save_video(video_frames, f"{base_path}.mp4")
                             extract_frames(video_frames, base_path)
 
-            except Exception as e:
-                print(f"Error processing entry {idx}: {str(e)}")
-                continue
+                        except Exception as e:
+                            print(f"Error processing entry {idx}: {str(e)}")
+                            continue
 
 
 def main() -> None:
