@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 from PIL import Image
 import torch
@@ -9,6 +8,7 @@ from typing import Tuple, List, Dict, Any
 import numpy as np
 import cv2
 from datetime import datetime
+import sys
 from typing import NamedTuple
 import dataclasses
 import copy
@@ -22,7 +22,8 @@ from transformers import (pipeline, set_seed,
 class ImageProcessingLog:
     """Class to store processing information for each image."""
     image_name: str
-    image_prompt: str
+    video_prompts: List[str]
+    prompt_index: int
     llava_prompt: str | None = None
     llava_output: str | None = None
     final_prompt: str | None = None
@@ -30,43 +31,11 @@ class ImageProcessingLog:
     def __setattr__(self, name: str, value: Any) -> None:
         """Allow dynamic addition of Llama-specific attributes."""
         if not hasattr(self, name):
-            # Create new field dynamically
             self.__dict__[name] = value
-            # Add field to dataclass fields
             field = dataclasses.field(default=None)
             self.__class__.__dataclass_fields__[name] = field
         else:
             super().__setattr__(name, value)
-
-
-def split_into_groups(items: List[Any], num_groups: int) -> List[List[Any]]:
-    """
-    Split a list into K approximately equal sized groups.
-
-    Args:
-        items: List to split
-        num_groups: Number of groups to create
-
-    Returns:
-        List of groups
-    """
-    # Calculate base size and remainder
-    n = len(items)
-    base_size = n // num_groups
-    remainder = n % num_groups
-
-    groups = []
-    start = 0
-
-    # Create groups
-    for i in range(num_groups):
-        # Add one extra item to the first 'remainder' groups
-        group_size = base_size + (1 if i < remainder else 0)
-        end = start + group_size
-        groups.append(items[start:end])
-        start = end
-
-    return groups
 
 
 def setup_run_directories(base_output_dir: str) -> str:
@@ -79,11 +48,9 @@ def setup_run_directories(base_output_dir: str) -> str:
     Returns:
         Run directory path
     """
-    # Create run directory with current date
     current_date = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir = os.path.join(base_output_dir, current_date)
     os.makedirs(run_dir, exist_ok=True)
-
     return run_dir
 
 
@@ -95,7 +62,6 @@ def save_run_config(run_dir: str, args: argparse.Namespace) -> None:
         run_dir: Run directory path
         args: Command line arguments
     """
-    # Convert arguments to dictionary
     config = {
         "command_line_args": vars(args),
         "execution_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -109,7 +75,6 @@ def save_run_config(run_dir: str, args: argparse.Namespace) -> None:
         }
     }
 
-    # Save configuration
     config_path = os.path.join(run_dir, "run_config.json")
     with open(config_path, 'w') as f:
         json.dump(config, f, indent=2)
@@ -136,12 +101,42 @@ def update_processing_log(log_path: str, image_log: ImageProcessingLog) -> None:
         for field_name in image_log.__dataclass_fields__
     }
 
+    # Create unique key combining image name and prompt index
+    log_key = f"{image_log.image_name}_prompt_{image_log.prompt_index}"
+
     # Update log with new image data
-    log_data[image_log.image_name] = log_entry
+    log_data[log_key] = log_entry
 
     # Save updated log
     with open(log_path, 'w') as f:
         json.dump(log_data, f, indent=2)
+
+
+def split_into_groups(items: List[Any], num_groups: int) -> List[List[Any]]:
+    """
+    Split a list into K approximately equal sized groups.
+
+    Args:
+        items: List to split
+        num_groups: Number of groups to create
+
+    Returns:
+        List of groups
+    """
+    n = len(items)
+    base_size = n // num_groups
+    remainder = n % num_groups
+
+    groups = []
+    start = 0
+
+    for i in range(num_groups):
+        group_size = base_size + (1 if i < remainder else 0)
+        end = start + group_size
+        groups.append(items[start:end])
+        start = end
+
+    return groups
 
 
 def setup_llava_model() -> Tuple[LlavaNextForConditionalGeneration, LlavaNextProcessor]:
@@ -178,7 +173,6 @@ def get_image_caption(image: Image.Image,
     Returns:
         Generated caption
     """
-    # Prepare conversation prompt
     conversation = [
         {
             "role": "user",
@@ -190,14 +184,11 @@ def get_image_caption(image: Image.Image,
     ]
     prompt = processor.apply_chat_template(conversation, add_generation_prompt=True)
 
-    # Process inputs
     inputs = processor(images=image, text=prompt, return_tensors="pt").to("cuda:0")
 
-    # Generate caption
     output = model.generate(**inputs, max_new_tokens=100)
     caption = processor.decode(output[0], skip_special_tokens=True)
 
-    # Clean up caption - remove everything before and including [/INST]
     if "[/INST]" in caption:
         caption = caption.split("[/INST]")[1].strip()
 
@@ -214,11 +205,9 @@ def setup_llama_pipeline(llama_seed: int | None) -> Any:
     Returns:
         The configured pipeline
     """
-    # Set seed if provided
     if llama_seed is not None:
         set_seed(llama_seed)
 
-    # Initialize the pipeline
     pipe = pipeline(
         "text-generation",
         model="meta-llama/Meta-Llama-3-8B-Instruct",
@@ -226,7 +215,6 @@ def setup_llama_pipeline(llama_seed: int | None) -> Any:
         device="cuda" if torch.cuda.is_available() else "cpu"
     )
 
-    # Set up the tokenizer
     pipe.tokenizer.pad_token_id = pipe.model.config.eos_token_id
 
     return pipe
@@ -254,13 +242,11 @@ def get_video_prompt(llama_pipe: Any,
     Returns:
         The generated video prompt
     """
-    # Format the message as a conversation
     message = [
         {"role": "system", "content": role},
         {"role": "user", "content": original_prompt}
     ]
 
-    # Generate text
     output = llama_pipe(
         message,
         max_new_tokens=max_new_tokens,
@@ -269,14 +255,12 @@ def get_video_prompt(llama_pipe: Any,
         top_p=top_p,
     )
 
-    # Extract the generated prompt
     return output[0]["generated_text"][-1]["content"].strip()
 
 
 def resize_and_pad_image(image_path: str, target_height: int = 480, target_width: int = 720) -> Image.Image:
     """
     Resize image (up or down) such that its larger dimension fits the required size, then pad the other dimension.
-    Handles both upsampling and downsampling cases.
 
     Args:
         image_path: Path to the input image
@@ -286,46 +270,31 @@ def resize_and_pad_image(image_path: str, target_height: int = 480, target_width
     Returns:
         Processed PIL Image
     """
-    # Load image
     img = Image.open(image_path)
 
-    # Convert to RGB if needed
     if img.mode != 'RGB':
         img = img.convert('RGB')
 
-    # Get original dimensions
     orig_width, orig_height = img.size
 
-    # Calculate scaling ratios relative to targets
     width_ratio = target_width / orig_width
     height_ratio = target_height / orig_height
 
-    # For upsampling (image smaller than target):
-    # If both dimensions are smaller, use the larger ratio to ensure smallest dimension meets target
-    # For downsampling (image larger than target):
-    # Use the smaller ratio to ensure largest dimension meets target
     if orig_width <= target_width and orig_height <= target_height:
-        # Upsampling case - use larger ratio
         scale_ratio = max(width_ratio, height_ratio)
     else:
-        # Downsampling case - use smaller ratio
         scale_ratio = min(width_ratio, height_ratio)
 
-    # Calculate new dimensions
     new_width = int(orig_width * scale_ratio)
     new_height = int(orig_height * scale_ratio)
 
-    # Resize image
     img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-    # Create new black image with target dimensions
     final_img = Image.new('RGB', (target_width, target_height), (0, 0, 0))
 
-    # Calculate padding
     left_padding = (target_width - new_width) // 2
     top_padding = (target_height - new_height) // 2
 
-    # Paste resized image onto black background
     final_img.paste(img, (left_padding, top_padding))
 
     return final_img
@@ -339,11 +308,9 @@ def extract_frames(video_frames: List[Image.Image], output_path: str) -> None:
         video_frames: List of PIL Images representing video frames
         output_path: Base path for saving the frames (without extension)
     """
-    # Extract first and last frames (already PIL Images)
     first_frame = video_frames[0]
     last_frame = video_frames[-1]
 
-    # Save frames
     first_frame.save(f"{output_path}_first_frame.png")
     last_frame.save(f"{output_path}_last_frame.png")
 
@@ -360,11 +327,9 @@ def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) 
     if not video_frames:
         raise ValueError("No frames provided")
 
-    # Convert first frame to numpy array to get dimensions
     frame = np.array(video_frames[0])
     height, width = frame.shape[:2]
 
-    # Initialize video writer
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(
         output_path,
@@ -374,14 +339,11 @@ def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) 
     )
 
     try:
-        # Write each frame
         for frame in video_frames:
-            # Convert PIL Image to numpy array and change color space from RGB to BGR
             frame_np = np.array(frame)
             frame_bgr = cv2.cvtColor(frame_np, cv2.COLOR_RGB2BGR)
             out.write(frame_bgr)
     finally:
-        # Make sure to release the VideoWriter
         out.release()
 
 
@@ -395,6 +357,8 @@ def process_videos(annotations_path: str,
                    top_p: float,
                    do_sample: bool,
                    llama_seed: int | None,
+                   num_inference_steps: int,
+                   num_frames: int,
                    model_path: str = "THUDM/CogVideoX-5b-I2V",
                    num_groups: int | None = None,
                    group_index: int | None = None) -> None:
@@ -475,111 +439,111 @@ def process_videos(annotations_path: str,
         for idx, entry in enumerate(images):
             try:
                 print(f"  Processing image {idx + 1}/{len(images)}")
-
-                image_log = ImageProcessingLog(
-                    image_name=entry['image_name'],
-                    image_prompt=entry['image_prompt']
-                )
-
                 base_name = os.path.splitext(entry['image_name'])[0]
-                context = {
-                    "image_prompt": entry['image_prompt']
-                }
 
-                final_prompt = None
+                # Process each video prompt
+                for prompt_idx, video_prompt in enumerate(entry['video_prompts']):
+                    print(f"    Processing prompt {prompt_idx + 1}/{len(entry['video_prompts'])}")
 
-                # Run LLaVA if specified in settings
-                if "llava" in setting and llava_model is not None:
-                    llava_config = setting["llava"]
-                    image_log.llava_prompt = llava_config["prompt"]
-
-                    image_path = os.path.join(images_dir, entry['image_name'])
-                    image = Image.open(image_path)
-                    if image.mode != 'RGB':
-                        image = image.convert('RGB')
-
-                    llava_caption = get_image_caption(
-                        image=image,
-                        model=llava_model,
-                        processor=llava_processor,
-                        prompt=llava_config["prompt"]
+                    image_log = ImageProcessingLog(
+                        image_name=entry['image_name'],
+                        video_prompts=entry['video_prompts'],
+                        prompt_index=prompt_idx
                     )
-                    print(f"    LLaVA caption: {llava_caption}")
-                    context["llava_output"] = llava_caption
-                    image_log.llava_output = llava_caption
 
-                # Process with multiple Llama runs if specified in settings
-                llama_keys = sorted([k for k in setting.keys() if k.startswith("llama")],
-                                    key=lambda x: int(x[5:]) if x[5:].isdigit() else float('inf'))
+                    context = {
+                        "video_prompt": video_prompt
+                    }
 
-                for llama_key in llama_keys:
-                    if llama_pipe is not None:
-                        config = setting[llama_key]
-                        print(f"    Running {llama_key}")
+                    # Run LLaVA if specified in settings
+                    if "llava" in setting and llava_model is not None:
+                        llava_config = setting["llava"]
+                        image_log.llava_prompt = llava_config["prompt"]
 
-                        llama_prompt = replace_placeholders(config["prompt"], context)
+                        image_path = os.path.join(images_dir, entry['image_name'])
+                        image = Image.open(image_path)
+                        if image.mode != 'RGB':
+                            image = image.convert('RGB')
 
-                        # Store prompt in log with the specific index
-                        setattr(image_log, f"{llama_key}_prompt", llama_prompt)
-                        setattr(image_log, f"{llama_key}_role", config["role"])
-
-                        llama_output = get_video_prompt(
-                            llama_pipe=llama_pipe,
-                            original_prompt=llama_prompt,
-                            role=config["role"],
-                            max_new_tokens=max_new_tokens,
-                            temperature=temperature,
-                            top_p=top_p,
-                            do_sample=do_sample
+                        llava_caption = get_image_caption(
+                            image=image,
+                            model=llava_model,
+                            processor=llava_processor,
+                            prompt=llava_config["prompt"]
                         )
-                        print(f"    {llama_key} output: {llama_output}")
+                        print(f"      LLaVA caption: {llava_caption}")
+                        context["llava_output"] = llava_caption
+                        image_log.llava_output = llava_caption
 
-                        # Store output in context with specific key
-                        context[f"{llama_key}_output"] = llama_output
-                        # Store output in log with specific key
-                        setattr(image_log, f"{llama_key}_output", llama_output)
+                    # Process with multiple Llama runs if specified in settings
+                    llama_keys = sorted([k for k in setting.keys() if k.startswith("llama")],
+                                        key=lambda x: int(x[5:]) if x[5:].isdigit() else float('inf'))
 
-                # Get final prompt for CogVideo
-                if "cog" not in setting:
-                    raise ValueError(f"Setting {setting_idx} missing required 'cog' configuration")
+                    for llama_key in llama_keys:
+                        if llama_pipe is not None:
+                            config = setting[llama_key]
+                            print(f"      Running {llama_key}")
 
-                final_prompt = replace_placeholders(setting["cog"]["prompt"], context)
-                print(f"    Final prompt: {final_prompt}")
-                image_log.final_prompt = final_prompt
+                            llama_prompt = replace_placeholders(config["prompt"], context)
 
-                # Update processing log
-                update_processing_log(log_path, image_log)
+                            setattr(image_log, f"{llama_key}_prompt", llama_prompt)
+                            setattr(image_log, f"{llama_key}_role", config["role"])
 
-                # Prepare image for CogVideoX if not done already
-                if "processed_image" not in context:
-                    image_path = os.path.join(images_dir, entry['image_name'])
-                    processed_image = resize_and_pad_image(image_path)
-                    context["processed_image"] = processed_image
+                            llama_output = get_video_prompt(
+                                llama_pipe=llama_pipe,
+                                original_prompt=llama_prompt,
+                                role=config["role"],
+                                max_new_tokens=max_new_tokens,
+                                temperature=temperature,
+                                top_p=top_p,
+                                do_sample=do_sample
+                            )
+                            print(f"      {llama_key} output: {llama_output}")
 
-                # Generate videos with different seeds and guidance scales
-                variant_count = 0
-                for seed in seeds:
-                    for guidance_scale in guidance_scales:
-                        variant_count += 1
-                        print(f"      Generating variant {variant_count}/{len(seeds) * len(guidance_scales)} "
-                              f"(seed={seed}, guidance_scale={guidance_scale})")
+                            context[f"{llama_key}_output"] = llama_output
+                            setattr(image_log, f"{llama_key}_output", llama_output)
 
-                        video_frames: List[Image.Image] = cog_pipe(
-                            prompt=final_prompt,
-                            image=context["processed_image"],
-                            num_inference_steps=50,
-                            num_frames=49,
-                            guidance_scale=guidance_scale,
-                            generator=torch.Generator().manual_seed(seed)
-                        ).frames[0]
+                    # Get final prompt for CogVideo
+                    if "cog" not in setting:
+                        raise ValueError(f"Setting {setting_idx} missing required 'cog' configuration")
 
-                        base_path = os.path.join(
-                            setting_dir,
-                            f'{base_name}_seed_{seed}_guidance_{guidance_scale:.1f}'
-                        )
+                    final_prompt = replace_placeholders(setting["cog"]["prompt"], context)
+                    print(f"      Final prompt: {final_prompt}")
+                    image_log.final_prompt = final_prompt
 
-                        save_video(video_frames, f"{base_path}.mp4")
-                        extract_frames(video_frames, base_path)
+                    # Update processing log
+                    update_processing_log(log_path, image_log)
+
+                    # Prepare image for CogVideoX
+                    if "processed_image" not in context:
+                        image_path = os.path.join(images_dir, entry['image_name'])
+                        processed_image = resize_and_pad_image(image_path)
+                        context["processed_image"] = processed_image
+
+                    # Generate videos with different seeds and guidance scales
+                    variant_count = 0
+                    for seed in seeds:
+                        for guidance_scale in guidance_scales:
+                            variant_count += 1
+                            print(f"        Generating variant {variant_count}/{len(seeds) * len(guidance_scales)} "
+                                  f"(seed={seed}, guidance_scale={guidance_scale})")
+
+                            video_frames: List[Image.Image] = cog_pipe(
+                                prompt=final_prompt,
+                                image=context["processed_image"],
+                                num_inference_steps=num_inference_steps,
+                                num_frames=num_frames,
+                                guidance_scale=guidance_scale,
+                                generator=torch.Generator().manual_seed(seed)
+                            ).frames[0]
+
+                            base_path = os.path.join(
+                                setting_dir,
+                                f'{base_name}_prompt_{prompt_idx}_seed_{seed}_guidance_{guidance_scale:.1f}'
+                            )
+
+                            save_video(video_frames, f"{base_path}.mp4")
+                            extract_frames(video_frames, base_path)
 
             except Exception as e:
                 print(f"Error processing entry {idx}: {str(e)}")
@@ -588,6 +552,7 @@ def process_videos(annotations_path: str,
 
 def main() -> None:
     parser = argparse.ArgumentParser(description='Process images to videos using CogVideoX')
+    # Previous arguments remain the same
     parser.add_argument('--annotations', type=str, required=True,
                         help='Path to annotations JSON file')
     parser.add_argument('--images_dir', type=str, required=True,
@@ -614,12 +579,16 @@ def main() -> None:
                         help='Number of groups to split images into')
     parser.add_argument('--group_index', type=int, default=None,
                         help='Index of group to process (0-based)')
+    parser.add_argument('--num_inference_steps', type=int, default=50,
+                        help='Number of inference steps for video generation')
+    parser.add_argument('--num_frames', type=int, default=49,
+                        help='Number of frames to generate')
 
     parser.set_defaults(do_sample=True)
 
     args = parser.parse_args()
 
-    # Validate group processing arguments
+    # Validation code remains the same
     if (args.num_groups is None) != (args.group_index is None):
         parser.error("Both --num_groups and --group_index must be provided for group processing")
 
@@ -644,6 +613,8 @@ def main() -> None:
         top_p=args.top_p,
         do_sample=args.do_sample,
         llama_seed=args.llama_seed,
+        num_inference_steps=args.num_inference_steps,  # Add new parameter
+        num_frames=args.num_frames,  # Add new parameter
         model_path=args.model_path,
         num_groups=args.num_groups,
         group_index=args.group_index
