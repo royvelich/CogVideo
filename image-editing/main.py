@@ -9,6 +9,10 @@ import numpy as np
 import cv2
 from datetime import datetime
 import sys
+import shutil
+import paramiko
+import re
+import socket
 from typing import NamedTuple
 import dataclasses
 import copy
@@ -315,14 +319,15 @@ def extract_frames(video_frames: List[Image.Image], output_path: str) -> None:
     last_frame.save(f"{output_path}_last_frame.png")
 
 
-def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) -> None:
+def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8, video_format: str = 'mp4') -> None:
     """
-    Convert PIL Image frames to video and save as MP4 using OpenCV.
+    Convert PIL Image frames to video and save using OpenCV in specified format.
 
     Args:
         video_frames: List of PIL Images representing video frames
         output_path: Path where to save the video
         fps: Frames per second for the output video
+        video_format: Format of the output video (e.g., 'mp4', 'avi')
     """
     if not video_frames:
         raise ValueError("No frames provided")
@@ -330,7 +335,17 @@ def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) 
     frame = np.array(video_frames[0])
     height, width = frame.shape[:2]
 
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    FOURCC_CODES = {
+        'mp4': cv2.VideoWriter_fourcc(*'mp4v'),
+        'avi': cv2.VideoWriter_fourcc(*'XVID'),
+        'mov': cv2.VideoWriter_fourcc(*'mp4v'),
+        # Add more formats if needed
+    }
+    
+    fourcc = FOURCC_CODES.get(video_format.lower())
+    if fourcc is None:
+        raise ValueError(f"Unsupported video format: {video_format}")
+
     out = cv2.VideoWriter(
         output_path,
         fourcc,
@@ -347,6 +362,33 @@ def save_video(video_frames: List[Image.Image], output_path: str, fps: int = 8) 
         out.release()
 
 
+def remote_file_exists(sftp_client: paramiko.SFTPClient, remote_path: str) -> bool:
+    try:
+        sftp_client.stat(remote_path)
+        return True
+    except FileNotFoundError:
+        return False
+    except IOError:
+        return False  # For older versions of Paramiko
+
+
+def copy_file_to_remote(sftp_client: paramiko.SFTPClient, local_path: str, remote_path: str) -> None:
+    sftp_client.put(local_path, remote_path)
+
+
+def sftp_mkdirs(sftp: paramiko.SFTPClient, remote_directory: str) -> None:
+    dirs = []
+    while remote_directory not in ('/', ''):
+        dirs.append(remote_directory)
+        remote_directory, _ = os.path.split(remote_directory)
+    dirs.reverse()
+    for directory in dirs:
+        try:
+            sftp.stat(directory)
+        except FileNotFoundError:
+            sftp.mkdir(directory)
+
+
 def process_videos(annotations_path: str,
                    images_dir: str,
                    run_dir: str,
@@ -361,10 +403,18 @@ def process_videos(annotations_path: str,
                    num_frames: int,
                    model_path: str = "THUDM/CogVideoX-5b-I2V",
                    num_groups: int | None = None,
-                   group_index: int | None = None) -> None:
+                   group_index: int | None = None,
+                   video_format: str = 'mp4',
+                   secondary_output_dir: str | None = None,
+                   user: str | None = None,
+                   host: str | None = None,
+                   ssh_password: str | None = None) -> None:
     """
     Process images to videos using CogVideoX based on annotations.
     """
+    ssh = None
+    sftp = None
+
     # Load annotations
     with open(annotations_path, 'r') as f:
         annotations = json.load(f)
@@ -436,6 +486,41 @@ def process_videos(annotations_path: str,
             if placeholder in result:
                 result = result.replace(placeholder, value)
         return result
+
+    remote_base_dir = secondary_output_dir
+    # Setup secondary output directory if provided
+    if secondary_output_dir:
+        if os.path.exists(secondary_output_dir):
+            is_remote = False
+            print(f"Secondary output directory exists locally: {secondary_output_dir}")
+        else:
+            is_remote = True
+            if not host or not user:
+                raise ValueError("Host and user must be provided for remote connections.")
+
+            # Set up SSH and SFTP clients
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+            # Attempt to connect
+            try:
+                if ssh_password:
+                    ssh.connect(hostname=host, username=user, password=ssh_password)
+                else:
+                    ssh.connect(hostname=host, username=user)
+            except paramiko.AuthenticationException:
+                import getpass
+                ssh_password = getpass.getpass(f"Password for {user}@{host}: ")
+                ssh.connect(hostname=host, username=user, password=ssh_password)
+
+            sftp = ssh.open_sftp()
+            remote_base_dir = secondary_output_dir
+            print(f"Connected to remote host {host} as user {user}")
+    else:
+        remote_base_dir = None
+        is_remote = False
+        raise ValueError("Secondary output directory not provided")
+    
 
     # Process each setting
     for setting_idx, setting in enumerate(all_settings):
@@ -542,6 +627,40 @@ def process_videos(annotations_path: str,
                                 processed_image = resize_and_pad_image(image_path)
                                 context["processed_image"] = processed_image
 
+                            # Generate base path
+                            base_path = os.path.join(
+                                setting_dir,
+                                f'{base_name}_prompt_{prompt_idx}_seed_{seed}_guidance_{guidance_scale:.1f}'
+                            )
+                            video_file = f"{base_path}.{video_format}"
+                            first_frame_file = f"{base_path}_first_frame.png"
+                            last_frame_file = f"{base_path}_last_frame.png"
+
+                            # Before processing, check if files exist in secondary output dir
+                            skip_processing = False
+                            if secondary_output_dir:
+                                # Construct remote paths
+                                relative_path = os.path.relpath(video_file, run_dir)
+                                remote_video_file = os.path.join(remote_base_dir, relative_path)
+                                relative_first_frame = os.path.relpath(first_frame_file, run_dir)
+                                remote_first_frame_file = os.path.join(remote_base_dir, relative_first_frame)
+                                relative_last_frame = os.path.relpath(last_frame_file, run_dir)
+                                remote_last_frame_file = os.path.join(remote_base_dir, relative_last_frame)
+
+                                # Check if files exist
+                                if is_remote:
+                                    # Use sftp to check
+                                    files_exist = all(remote_file_exists(sftp, remote_file) for remote_file in
+                                                      [remote_video_file, remote_first_frame_file, remote_last_frame_file])
+                                else:
+                                    # Local path
+                                    files_exist = all(os.path.exists(remote_file) for remote_file in
+                                                      [remote_video_file, remote_first_frame_file, remote_last_frame_file])
+
+                                if files_exist:
+                                    print(f"          Files already exist in secondary directory, skipping processing.")
+                                    continue
+
                             # Generate video
                             video_frames: List[Image.Image] = cog_pipe(
                                 prompt=final_prompt,
@@ -552,17 +671,36 @@ def process_videos(annotations_path: str,
                                 generator=torch.Generator().manual_seed(seed)
                             ).frames[0]
 
-                            base_path = os.path.join(
-                                setting_dir,
-                                f'{base_name}_prompt_{prompt_idx}_seed_{seed}_guidance_{guidance_scale:.1f}'
-                            )
-
-                            save_video(video_frames, f"{base_path}.mp4")
+                            save_video(video_frames, video_file, video_format=video_format)
                             extract_frames(video_frames, base_path)
+
+                            # After processing, copy files to secondary output dir
+                            if secondary_output_dir:
+                                # Ensure remote directories exist
+                                if is_remote:
+                                    remote_dir = os.path.dirname(remote_video_file)
+                                    sftp_mkdirs(sftp, remote_dir)
+                                else:
+                                    os.makedirs(os.path.dirname(remote_video_file), exist_ok=True)
+
+                                # Copy files
+                                if is_remote:
+                                    copy_file_to_remote(sftp, video_file, remote_video_file)
+                                    copy_file_to_remote(sftp, first_frame_file, remote_first_frame_file)
+                                    copy_file_to_remote(sftp, last_frame_file, remote_last_frame_file)
+                                else:
+                                    shutil.copy2(video_file, remote_video_file)
+                                    shutil.copy2(first_frame_file, remote_first_frame_file)
+                                    shutil.copy2(last_frame_file, remote_last_frame_file)
 
                         except Exception as e:
                             print(f"Error processing entry {idx} ({entry['image_name']}): {str(e)}")
                             continue
+
+    # Close SSH and SFTP connections if any
+    if secondary_output_dir and 'ssh' in locals() and is_remote:
+        sftp.close()
+        ssh.close()
 
 
 def main() -> None:
@@ -598,6 +736,15 @@ def main() -> None:
                         help='Number of inference steps for video generation')
     parser.add_argument('--num_frames', type=int, default=49,
                         help='Number of frames to generate')
+    parser.add_argument('--video_format', type=str, default='avi',
+                        help='Video format to save the output videos (e.g., mp4, avi)')
+    parser.add_argument('--secondary_output_dir', type=str, default="/mnt/gipnetapp_public/video_edit/results",
+                        help='Secondary directory to save output videos and frames (can be remote)')
+
+    parser.add_argument('--user', type=str, default="snoamr")
+    parser.add_argument('--host', type=str, default="132.68.39.112")
+    parser.add_argument('--ssh_password', type=str, default="keypurNR9294!")
+
 
     parser.set_defaults(do_sample=True)
 
@@ -628,11 +775,16 @@ def main() -> None:
         top_p=args.top_p,
         do_sample=args.do_sample,
         llama_seed=args.llama_seed,
-        num_inference_steps=args.num_inference_steps,  # Add new parameter
-        num_frames=args.num_frames,  # Add new parameter
+        num_inference_steps=args.num_inference_steps,
+        num_frames=args.num_frames,
         model_path=args.model_path,
         num_groups=args.num_groups,
-        group_index=args.group_index
+        group_index=args.group_index,
+        video_format=args.video_format,
+        secondary_output_dir=args.secondary_output_dir,
+        user=args.user,
+        host=args.host,
+        ssh_password=args.ssh_password
     )
 
 
