@@ -1,6 +1,6 @@
 import os
 import json
-from PIL import Image
+from PIL import Image, ImageFile
 import torch
 from pathlib import Path
 import argparse
@@ -20,6 +20,7 @@ from diffusers import CogVideoXImageToVideoPipeline
 from diffusers.utils import load_image
 from transformers import (pipeline, set_seed,
                           LlavaNextProcessor, LlavaNextForConditionalGeneration)
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 @dataclasses.dataclass
