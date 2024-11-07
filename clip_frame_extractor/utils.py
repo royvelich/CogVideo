@@ -19,7 +19,6 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 TORCH_TYPE = torch.bfloat16 if torch.cuda.is_available() and torch.cuda.get_device_capability()[
     0] >= 8 else torch.float16
 
-
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, trust_remote_code=True)
 
 # Load the model
@@ -37,7 +36,7 @@ model = AutoModelForCausalLM.from_pretrained(
 
 
 def analyze_frame_concise(
-        frame  : Union[PIL.Image.Image, np.ndarray, torch.Tensor],
+        frame: Union[PIL.Image.Image, np.ndarray, torch.Tensor],
         device: str = "cuda" if torch.cuda.is_available() else "cpu",
         torch_type: torch.dtype = torch.float16
 ) -> str:
@@ -138,7 +137,6 @@ def generate_text_variations(input_text, device="cuda"):
     strategy = 'chat'
     results = [input_text]  # Start with original text
 
-
     # List of 10 different query formats
     queries = [
         f"Complete this statement: {input_text}",
@@ -152,7 +150,6 @@ def generate_text_variations(input_text, device="cuda"):
         f"Share a different way to describe: {input_text}",
         f"Give me a variation of this phrase: {input_text}"
     ]
-
 
     try:
         for query in queries:
@@ -180,7 +177,6 @@ def generate_text_variations(input_text, device="cuda"):
                 "temperature": 0.7,
                 "num_beams": 3,
             }
-
 
             with torch.no_grad():
                 model.eval()
@@ -211,7 +207,6 @@ def generate_text_variations(input_text, device="cuda"):
         pass
 
     return results
-
 
 
 def detect_excessive_camera_movement(video_path, threshold=1.3):
@@ -261,11 +256,12 @@ def detect_excessive_camera_movement(video_path, threshold=1.3):
         print("No movement scores calculated")
         return False, np.inf, np.inf
 
+
 def load_video(video_path):
     bridge.set_bridge('torch')
     with open(video_path, 'rb') as f:
         mp4_stream = f.read()
-    num_frames = 8 # to avoid cuda out of memory
+    num_frames = 8  # to avoid cuda out of memory
 
     decord_vr = VideoReader(io.BytesIO(mp4_stream), ctx=cpu(0))
     total_frames = len(decord_vr)
@@ -313,6 +309,7 @@ Then target text:
 Looking at your image description,  what happens in the image that is not captured by the target text?  what is the difference between the two descriptions?"""
 
     return prompt
+
 
 def generate_prompt_step_2(comparison_text, device="cuda"):
     prompt = f"""Regarding the differences mention here {comparison_text}, write in a clear and concise sentence whats happen in the image?"""
@@ -398,7 +395,6 @@ def process_video_to_text(video_path, last_frame_to_process=None, queries=None, 
     model.eval()
     count = 0
     for query in queries:
-
         print("count: ", count)
         count += 1
 
@@ -422,7 +418,7 @@ def process_video_to_text(video_path, last_frame_to_process=None, queries=None, 
             "max_new_tokens": max_new_tokens,
             "pad_token_id": 128002,
             "top_k": 1,
-            "do_sample": False, # maybe need True
+            "do_sample": False,  # maybe need True
             "top_p": 0.1,
             "temperature": 0.1,
         }
@@ -436,9 +432,6 @@ def process_video_to_text(video_path, last_frame_to_process=None, queries=None, 
     gc.collect()
 
     return results
-
-
-
 
 
 def extract_n_images_from_video(video_path: str, output_dir: str, n: int) -> List[str]:
@@ -457,7 +450,7 @@ def extract_n_images_from_video(video_path: str, output_dir: str, n: int) -> Lis
 
     # Calculate the step size
     step = max(1, total_frames // n)
-    
+
     frame_paths = []
     for i in range(n):
         frame_number = min(i * step, total_frames - 1)
@@ -476,7 +469,6 @@ def extract_n_images_from_video(video_path: str, output_dir: str, n: int) -> Lis
 
     print(f"{len(frame_paths)} frames extracted successfully.")
     return frame_paths
-
 
 
 def main():
@@ -516,13 +508,11 @@ def process_video_directory(video_dir: str, output_base_dir: str, n: int, json_o
         except Exception as e:
             print(f"Error processing {video_file}: {str(e)}")
 
-
         video_name = os.path.splitext(video_file)[0]
         output_dir = os.path.join(output_base_dir, video_name)
 
         # Extract frames
         frame_paths = extract_n_images_from_video(video_path, output_dir, n)
-
 
         # Add to dataset
         dataset.append({
@@ -536,9 +526,6 @@ def process_video_directory(video_dir: str, output_base_dir: str, n: int, json_o
         json.dump(dataset, f, indent=2)
 
     print(f"Dataset saved to {json_output}")
-
-
-
 
 
 if __name__ == "__main__":
