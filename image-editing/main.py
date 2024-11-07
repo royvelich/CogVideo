@@ -661,6 +661,7 @@ def process_videos(annotations_path: str,
                                     print(f"          Files already exist in secondary directory, skipping processing.")
                                     continue
 
+
                             # Generate video
                             video_frames: List[Image.Image] = cog_pipe(
                                 prompt=final_prompt,
@@ -689,12 +690,12 @@ def process_videos(annotations_path: str,
                                     copy_file_to_remote(sftp, first_frame_file, remote_first_frame_file)
                                     copy_file_to_remote(sftp, last_frame_file, remote_last_frame_file)
                                 else:
-                                    shutil.copy2(video_file, remote_video_file)
-                                    shutil.copy2(first_frame_file, remote_first_frame_file)
-                                    shutil.copy2(last_frame_file, remote_last_frame_file)
+                                    shutil.copyfile(video_file, remote_video_file)
+                                    shutil.copyfile(first_frame_file, remote_first_frame_file)
+                                    shutil.copyfile(last_frame_file, remote_last_frame_file)
 
                         except Exception as e:
-                            print(f"Error processing entry {idx} ({entry['image_name']}): {str(e)}")
+                            print(f"Error processing entry {idx} ({entry['image_name']}): {str(e)}, is remote: {is_remote}, local path: {video_file}, remote path: {remote_video_file}")
                             continue
 
     # Close SSH and SFTP connections if any
