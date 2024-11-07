@@ -1,6 +1,6 @@
 import os
 import json
-from PIL import Image
+from PIL import Image, ImageFile
 import torch
 from pathlib import Path
 import argparse
@@ -20,6 +20,7 @@ from diffusers import CogVideoXImageToVideoPipeline
 from diffusers.utils import load_image
 from transformers import (pipeline, set_seed,
                           LlavaNextProcessor, LlavaNextForConditionalGeneration)
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 @dataclasses.dataclass
@@ -689,9 +690,9 @@ def process_videos(annotations_path: str,
                                     copy_file_to_remote(sftp, first_frame_file, remote_first_frame_file)
                                     copy_file_to_remote(sftp, last_frame_file, remote_last_frame_file)
                                 else:
-                                    shutil.copy2(video_file, remote_video_file)
-                                    shutil.copy2(first_frame_file, remote_first_frame_file)
-                                    shutil.copy2(last_frame_file, remote_last_frame_file)
+                                    shutil.copyfile(video_file, remote_video_file)
+                                    shutil.copyfile(first_frame_file, remote_first_frame_file)
+                                    shutil.copyfile(last_frame_file, remote_last_frame_file)
 
                         except Exception as e:
                             print(f"Error processing entry {idx} ({entry['image_name']}): {str(e)}")
