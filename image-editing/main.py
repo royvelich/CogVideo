@@ -452,7 +452,8 @@ def process_videos(annotations_path: str,
         torch_dtype=torch.bfloat16
     )
 
-    cog_pipe.enable_sequential_cpu_offload()
+    cog_pipe.to("cuda")
+    # cog_pipe.enable_sequential_cpu_offload()
     cog_pipe.vae.enable_slicing()
     cog_pipe.vae.enable_tiling()
 
