@@ -60,14 +60,14 @@
             "image_name": "8.png",
             "original_prompt": "A bowl of apples.",
             "video_prompts": [
-                "The woven basket gently transforms into a round bowl holding the apples. Single shot."
+                "A video of a woven basket gently transforms into a round bowl holding the apples."
             ]
         },
         {
             "image_name": "9.png",
             "original_prompt": "A bear eating a fish.",
             "video_prompts": [
-                "The bear gently lowers its head to catch and eat a fish. Single shot."
+                "A video of a  bear gently lowers its head to catch and eat a fish."
             ]
         },
         {
