@@ -9,7 +9,7 @@
     "images": [
         {
             "image_name": "reds_54.png",
-            "original_prompt": "a happy person making a heart shape with their hands.",
+            "original_prompt": "a happy person slowly making a heart shape with their hands.",
             "video_prompts": [
                 "A happy person making a heart shape with their hands."
             ]
