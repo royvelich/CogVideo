@@ -67,7 +67,7 @@
             "image_name": "9.png",
             "original_prompt": "A bear eating a fish.",
             "video_prompts": [
-                "The bear gently lowers its head to catch and eat a fish."
+                "The bear gently lowers its head to catch and eat a fish. Single shot."
             ]
         },
         {
