@@ -60,7 +60,7 @@
             "image_name": "8.png",
             "original_prompt": "A bowl of apples.",
             "video_prompts": [
-                "The woven basket gently transforms into a round bowl holding the apples."
+                "The woven basket gently transforms into a round bowl holding the apples. Single shot."
             ]
         },
         {
