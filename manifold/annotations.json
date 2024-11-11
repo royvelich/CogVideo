@@ -8,11 +8,47 @@
     ],
     "images": [
         {
-            "image_name": "reds_54.png",
+            "image_name": "reds_120.png",
             "original_prompt": "a happy person making a heart shape with their hands.",
             "video_prompts": [
-                "a happy person slowly making a heart shape with their hands."
+                "A happy person very slowly making a heart shape with their hands."
+            ]
+        },
+        {
+            "image_name": "reds_127.png",
+            "original_prompt": "a happy person making a heart shape with their hands.",
+            "video_prompts": [
+                "A happy person very slowly making a heart shape with their hands."
+            ]
+        },
+        {
+            "image_name": "reds_129.png",
+            "original_prompt": "a happy person making a heart shape with their hands.",
+            "video_prompts": [
+                "A happy person very slowly making a heart shape with their hands."
+            ]
+        },
+        {
+            "image_name": "reds_130.png",
+            "original_prompt": "a happy person making a heart shape with their hands.",
+            "video_prompts": [
+                "A happy person very slowly making a heart shape with their hands."
+            ]
+        },
+        {
+            "image_name": "reds_134.png",
+            "original_prompt": "a happy person making a heart shape with their hands.",
+            "video_prompts": [
+                "A happy person very slowly making a heart shape with their hands."
+            ]
+        },
+        {
+            "image_name": "reds_139.png",
+            "original_prompt": "a happy person making a heart shape with their hands.",
+            "video_prompts": [
+                "A happy person very slowly making a heart shape with their hands."
             ]
         }
     ]
 }
+
