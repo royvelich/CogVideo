@@ -18,7 +18,7 @@
             "image_name": "2.png",
             "original_prompt": "A photo of a cat in a grass field.",
             "video_prompts": [
-                "The background transforms from dry grass to a lush green field."
+                "The dry grass gradually transforms into a vibrant, lush green field."
             ]
         },
         {
@@ -32,7 +32,7 @@
             "image_name": "4.png",
             "original_prompt": "A photo of a bird spreading wings.",
             "video_prompts": [
-                "The bird gently spreads its wings."
+                "The bird gently spreads its wings wide away from its body."
             ]
         },
         {
@@ -60,14 +60,14 @@
             "image_name": "8.png",
             "original_prompt": "A bowl of apples.",
             "video_prompts": [
-                "The woven basket gently transforms into a round bowl holding the apples."
+                "The woven basket gently transforms into a bowl holding the apples."
             ]
         },
         {
             "image_name": "9.png",
             "original_prompt": "A bear eating a fish.",
             "video_prompts": [
-                "The bear gently lowers its head to catch and eat a fish."
+                "The bear gently lowers its head to eat a fish on the ground."
             ]
         },
         {
@@ -88,7 +88,7 @@
             "image_name": "12.png",
             "original_prompt": "A photo of a teddy bear doing pushups.",
             "video_prompts": [
-                "The teddy bear leans forward and lowers its arms to the ground."
+                "The teddy bear leans forward and lowers its arms to the ground, as if doing pushups."
             ]
         },
         {
@@ -116,21 +116,21 @@
             "image_name": "16.png",
             "original_prompt": "A girl riding a horse.",
             "video_prompts": [
-                "The horse gallops forward, revealing a girl seated on its back."
+                "The horse lowers its head, revealing a girl seated on its back."
             ]
         },
         {
             "image_name": "17.png",
             "original_prompt": "Two bananas.",
             "video_prompts": [
-                "A second banana gently rolls into view."
+                "A second banana gently rolls into view, coming to rest beside the first banana."
             ]
         },
         {
             "image_name": "18.png",
             "original_prompt": "A photo of a rotten banana.",
             "video_prompts": [
-                "Dark spots spread across the banana's surface, turning it brown and shriveled."
+                "The banana rots as dark spots and brown color spread across its surface"
             ]
         },
         {
@@ -144,14 +144,14 @@
             "image_name": "20.png",
             "original_prompt": "A goat and a cat hugging.",
             "video_prompts": [
-                "The goat and cat slowly lean toward each other and embrace."
+                "The goat and cat slowly lean toward each other and hug."
             ]
         },
         {
             "image_name": "21.png",
             "original_prompt": "Pizza with pineapple.",
             "video_prompts": [
-                "Slices of pineapple gradually appear on top of the pizza."
+                "Slices of pineapple appear on top of the pizza."
             ]
         },
         {
@@ -193,14 +193,14 @@
             "image_name": "27.png",
             "original_prompt": "A photo of a tree. Taken in autumn.",
             "video_prompts": [
-                "Green leaves gradually turn vibrant shades of red and orange."
+                "The tree's green leaves gradually turn vibrant shades of red and orange."
             ]
         },
         {
             "image_name": "28.png",
             "original_prompt": "A person giving a thumbs up.",
             "video_prompts": [
-                "The person's hand smoothly rotates upward, forming a thumbs up."
+                 "The person gradually raises their hand to give a thumbs up."
             ]
         },
         {
@@ -211,10 +211,10 @@
             ]
         },
         {
-            "image_name": "30.png",
+            "image_name": "30.png", 
             "original_prompt": "A vase of flowers filled with green water.",
             "video_prompts": [
-                "The clear water in the vase gradually turns a vibrant green."
+                "The clear water in the vase slowly turns green, accentuating the vibrant flowers."
             ]
         },
         {
@@ -270,7 +270,7 @@
             "image_name": "38.png",
             "original_prompt": "A goat to the right of a cat.",
             "video_prompts": [
-                "The goat takes a step to its right, positioning itself beside the cat."
+                "The goat takes a step to its left, positioning itself beside the cat."
             ]
         },
         {
@@ -291,7 +291,7 @@
             "image_name": "41.png",
             "original_prompt": "A knocked down chair.",
             "video_prompts": [
-                "The chair gently tips over and rests on its side."
+                "The chair gets knocked down and falls onto its side."
             ]
         },
         {
@@ -306,7 +306,7 @@
             "image_name": "43.png",
             "original_prompt": "A photo of a dog laying down.",
             "video_prompts": [
-                "The dog gently lowers itself to the ground."
+                "The dog gently lowers itself down, lying on the ground."
             ]
         },
         {
@@ -327,21 +327,21 @@
             "image_name": "46.png",
             "original_prompt": "A photo of a fruitful tree.",
             "video_prompts": [
-                "Bright fruits begin to appear on the tree branches."
+                "Bright fruits gradually begin to appear on the tree branches."
             ]
         },
         {
             "image_name": "47.png",
             "original_prompt": "A bird eating a fish.",
             "video_prompts": [
-                "The bird lowers its beak to eat a fish."
+                "The bird lowers its beak and takes a small fish to eat."
             ]
         },
         {
             "image_name": "48.png",
             "original_prompt": "A photo of a jumping cat.",
             "video_prompts": [
-                "The cat swiftly springs into the air."
+                "The cat swiftly springs, using his hind legs to leap into the air."
             ]
         },
         {
@@ -355,14 +355,14 @@
             "image_name": "50.png",
             "original_prompt": "A half eaten pizza.",
             "video_prompts": [
-                "Two slices gradually disappear from the pizza."
+                "Half of the pieces gradually disappear from the pizza."
             ]
         },
         {
             "image_name": "51.png",
             "original_prompt": "A black bear is walking in the grass next to red flowers.",
             "video_prompts": [
-                "The black bear strolls slowly through the grass as red flowers gently appear beside it."
+                "As the black bear strolls, red flowers appear in the grass along its path."
             ]
         },
         {
@@ -376,14 +376,14 @@
             "image_name": "53.png",
             "original_prompt": "Image of a cat wearing a floral shirt.",
             "video_prompts": [
-                "The cat calmly sits as a floral shirt gently appears around it."
+                " floral shirt gently appears around the cat as it calmly sits."
             ]
         },
         {
             "image_name": "54.png",
             "original_prompt": "A photo of a standing cat.",
             "video_prompts": [
-                "The cat gradually rises to stand on its back legs."
+                "The cat gradually rises to stand on all four legs."
             ]
         },
         {
@@ -425,7 +425,7 @@
             "image_name": "60.png",
             "original_prompt": "A photo of a peeled banana.",
             "video_prompts": [
-                "The peel gently unfurls, revealing the fruit inside."
+                "The banana is gently peeled, revealing the fruit inside."
             ]
         },
         {
@@ -439,21 +439,21 @@
             "image_name": "62.png",
             "original_prompt": "A basket of oranges.",
             "video_prompts": [
-                "The red apples gradually transform into vibrant oranges."
+                "The apples in the basket gradually transform into oranges."
             ]
         },
         {
             "image_name": "63.png",
             "original_prompt": "A photo of a bird cleaning itself.",
             "video_prompts": [
-                "The bird lowers its head and gently preens its feathers."
+                "The bird lowers its head and preens its feathers."
             ]
         },
         {
             "image_name": "64.png",
             "original_prompt": "A photo of a jumping dog.",
             "video_prompts": [
-                "The dog gradually leaps into the air."
+                "The dog first lifts its front legs and then leaps into the air."
             ]
         },
         {
@@ -474,7 +474,7 @@
             "image_name": "67.png",
             "original_prompt": "A photo of a sitting dog.",
             "video_prompts": [
-                "The dog gradually lowers itself to a seated position."
+                "The dog gradually lowers its back legs, settling into a seated position."
             ]
         },
         {
@@ -537,14 +537,14 @@
             "image_name": "76.png",
             "original_prompt": "An apple tree.",
             "video_prompts": [
-                "Small apples gradually appear among the branches."
+                "Red apples gradually appear among the branches of the tree."
             ]
         },
         {
             "image_name": "77.png",
             "original_prompt": "A photo of a cat wearing an apron.",
             "video_prompts": [
-                "The cat calmly sits as an apron gently wraps around its body."
+                "An apron gently wraps around the cat's body as it calmly sits.."
             ]
         },
         {
@@ -558,14 +558,14 @@
             "image_name": "79.png",
             "original_prompt": "A photo of a willow tree.",
             "video_prompts": [
-                "The branches gracefully droop as they transform into a willow tree."
+                "The branches of the tree gracefully droop, transforming it into a willow tree."
             ]
         },
         {
             "image_name": "80.png",
             "original_prompt": "A photo of a vase of colorful tulips.",
             "video_prompts": [
-                "The carnations gradually transform into vibrant tulips."
+                "The carnations gradually transform into vibrant tulips." 
             ]
         },
         {
@@ -600,14 +600,14 @@
             "image_name": "85.png",
             "original_prompt": "A photo of a zebra.",
             "video_prompts": [
-                "The horse's coat transforms into bold black-and-white stripes."
+                "The horse transforms into a zebra, its coat turning into black-and-white stripes."
             ]
         },
         {
             "image_name": "86.png",
             "original_prompt": "A pot of flowers.",
             "video_prompts": [
-                "The pitcher gently transforms into a ceramic pot holding the same vibrant flowers."
+                "The glass pitcher gently transforms into a ceramic pot."
             ]
         },
         {
@@ -635,14 +635,14 @@
             "image_name": "90.png",
             "original_prompt": "Two dogs growling at each other.",
             "video_prompts": [
-                "The two dogs turn towards each other, their expressions changing as they begin to growl."
+                "The two dogs turn towards each other, their expressions changing as they begin to growl." 
             ]
         },
         {
             "image_name": "91.png",
             "original_prompt": "A dog smoking a cigar.",
             "video_prompts": [
-                "Smoke gently begins to rise from a cigar held in the dog's mouth."
+                "A smoking cigar slowly appears in the dog's mouth."
             ]
         },
         {
@@ -656,14 +656,14 @@
             "image_name": "93.png",
             "original_prompt": "A photo of a sitting giraffe.",
             "video_prompts": [
-                "The giraffe slowly lowers itself onto the grass, tucking its legs beneath its body."
+                "The standing giraffe slowly lowers itself onto the grass to sit down."
             ]
         },
         {
             "image_name": "94.png",
             "original_prompt": "A torn up teddy bear.",
             "video_prompts": [
-                "The teddy bear gradually becomes torn, with stuffing spilling out."
+                "The teddy bear slowly rips, revealing stuffing coming out."
             ]
         },
         {
@@ -684,7 +684,7 @@
             "image_name": "97.png",
             "original_prompt": "A photo of a cat wearing a hat.",
             "video_prompts": [
-                "A hat gently lowers onto the cat's head as it sits calmly."
+                "The cat sits calmly as a hat appears on its head."
             ]
         },
         {
@@ -698,7 +698,7 @@
             "image_name": "99.png",
             "original_prompt": "An elephant in a circus.",
             "video_prompts": [
-                "The elephant gently lifts its trunk as colorful circus lights illuminate around it."
+                "Colorful circus lights fill the atmosphere, illuminating the elephant."
             ]
         },
         {
