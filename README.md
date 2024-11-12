@@ -35,7 +35,7 @@ Experience the CogVideoX-5B model online at <a href="https://huggingface.co/spac
 - 🔥 ```2024/8/27```: We have open-sourced a larger model in the CogVideoX series, **CogVideoX-5B**. We have
   significantly optimized the model's inference performance, greatly lowering the inference threshold. You can run *
   *CogVideoX-2B** on older GPUs like `GTX 1080TI`, and **CogVideoX-5B** on desktop GPUs like `RTX 3060`. Please strictly
-  follow the [requirements](requirements.txt) to update and install dependencies, and refer
+  follow the [requirements](requirements_cog.txt) to update and install dependencies, and refer
   to [cli_demo](inference/cli_demo.py) for inference code. Additionally, the open-source license for the **CogVideoX-2B
   ** model has been changed to the **Apache 2.0 License**.
 - 🔥 ```2024/8/6```: We have open-sourced **3D Causal VAE**, used for **CogVideoX-2B**, which can reconstruct videos with
