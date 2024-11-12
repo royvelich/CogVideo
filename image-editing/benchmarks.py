@@ -12,7 +12,9 @@ import time
 from diffusers import (
     StableDiffusionImg2ImgPipeline,
     StableDiffusionPipeline,
-    DDIMScheduler
+    DDIMScheduler,
+    DDIMInverseScheduler,
+    StableDiffusionPix2PixZeroPipeline
 )
 from transformers import Blip2Processor, Blip2ForConditionalGeneration
 from leditspp.scheduling_dpmsolver_multistep_inject import DPMSolverMultistepSchedulerInject
@@ -42,11 +44,12 @@ class BlipCaptioner:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Process images using LEDITS++, SD img2img, or DDPM')
+    parser = argparse.ArgumentParser(description='Process images using multiple pipelines')
+    # General arguments
     parser.add_argument('--input_dir', type=str, required=True, help='Directory containing input images')
     parser.add_argument('--output_dir', type=str, required=True, help='Directory for output images')
     parser.add_argument('--json_path', type=str, required=True, help='Path to JSON file with prompts')
-    parser.add_argument('--pipeline', type=str, choices=['ledits', 'img2img', 'ddpm'], required=True,
+    parser.add_argument('--pipeline', type=str, choices=['ledits', 'img2img', 'ddpm', 'pix2pix'], required=True,
                         help='Which pipeline to use')
     parser.add_argument('--seeds', type=int, nargs='+', default=[21],
                         help='List of seeds for generation')
@@ -55,34 +58,48 @@ def parse_args():
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu',
                         help='Device to run the model on')
 
-    # General parameters
-    parser.add_argument('--guidance_scale', type=float, default=7.5,
-                        help='Guidance scale for generation')
-    parser.add_argument('--num_inference_steps', type=int, default=50,
-                        help='Number of inference steps')
-
-    # Pipeline-specific parameters
-    parser.add_argument('--strength', type=float, default=0.8,
-                        help='Strength for img2img pipeline')
-    parser.add_argument('--edit_threshold', type=float, default=0.75,
+    # LEDITS-specific parameters
+    parser.add_argument('--ledits_guidance_scale', type=float, default=10.0,
+                        help='Guidance scale for LEDITS generation')
+    parser.add_argument('--ledits_num_inference_steps', type=int, default=50,
+                        help='Number of inference steps for LEDITS')
+    parser.add_argument('--ledits_edit_threshold', type=float, default=0.75,
                         help='Edit threshold for LEDITS')
 
+    # img2img-specific parameters
+    parser.add_argument('--img2img_guidance_scale', type=float, default=7.5,
+                        help='Guidance scale for img2img generation')
+    parser.add_argument('--img2img_num_inference_steps', type=int, default=50,
+                        help='Number of inference steps for img2img')
+    parser.add_argument('--img2img_strength', type=float, default=0.75,
+                        help='Strength for img2img pipeline')
+
     # DDPM-specific parameters
-    parser.add_argument('--cfg_src', type=float, default=3.5,
+    parser.add_argument('--ddpm_cfg_src', type=float, default=3.5,
                         help='Source classifier guidance scale for DDPM')
-    parser.add_argument('--cfg_tar', type=float, default=15.0,
+    parser.add_argument('--ddpm_cfg_tar', type=float, default=15.0,
                         help='Target classifier guidance scale for DDPM')
     parser.add_argument('--ddpm_mode', type=str, default='our_inv',
                         choices=['our_inv', 'p2pinv', 'p2pddim', 'ddim'],
                         help='DDPM inversion mode')
-    parser.add_argument('--skip', type=int, default=36,
+    parser.add_argument('--ddpm_num_inference_steps', type=int, default=50,
+                        help='Number of inference steps for DDPM')
+    parser.add_argument('--ddpm_skip', type=int, default=36,
                         help='Skip steps for DDPM')
-    parser.add_argument('--eta', type=float, default=1.0,
+    parser.add_argument('--ddpm_eta', type=float, default=1.0,
                         help='ETA parameter for DDPM')
-    parser.add_argument('--xa', type=float, default=0.6,
+    parser.add_argument('--ddpm_xa', type=float, default=0.6,
                         help='Cross attention control for DDPM')
-    parser.add_argument('--sa', type=float, default=0.2,
+    parser.add_argument('--ddpm_sa', type=float, default=0.2,
                         help='Self attention control for DDPM')
+
+    # Pix2Pix-specific parameters
+    parser.add_argument('--pix2pix_guidance_scale', type=float, default=7.5,
+                        help='Guidance scale for Pix2Pix generation')
+    parser.add_argument('--pix2pix_num_inference_steps', type=int, default=50,
+                        help='Number of inference steps for Pix2Pix')
+    parser.add_argument('--pix2pix_cross_attention_guidance_amount', type=float, default=0.15,
+                        help='Cross attention guidance amount for Pix2Pix Zero')
 
     return parser.parse_args()
 
@@ -129,22 +146,61 @@ def setup_ddpm_pipeline(model_path, device, args):
 
     pipe = StableDiffusionPipeline.from_pretrained(model_path).to(device)
     pipe.scheduler = scheduler
-    pipe.scheduler.set_timesteps(args.num_inference_steps)
+    pipe.scheduler.set_timesteps(args.ddpm_num_inference_steps)
     return pipe
 
 
-def process_with_ledits(pipe, image_path, prompt, output_path, seed, device, guidance_scale, edit_threshold):
-    try:
-        image = PIL.Image.open(image_path).convert("RGB")
-        gen = torch.Generator(device=device)
-        gen.manual_seed(seed)
+def setup_pix2pix_pipeline(model_path, device):
+    pipe = StableDiffusionPix2PixZeroPipeline.from_pretrained(
+        model_path,
+        torch_dtype=torch.float16 if device == 'cuda' else torch.float32,
+        safety_checker=None
+    )
+    pipe.scheduler = DDIMScheduler.from_config(pipe.scheduler.config)
+    pipe.inverse_scheduler = DDIMInverseScheduler.from_config(pipe.scheduler.config)
+    pipe.to(device)
+    return pipe
 
-        _ = pipe.invert(image=image, num_inversion_steps=50, skip=0.1)
+
+def generate_embeddings(pipe, prompts, batch_size=2):
+    """Generate embeddings for a list of prompts"""
+    return pipe.get_embeds(prompts, batch_size=batch_size)
+
+
+def get_output_path(output_dir, image_name, seed, pipeline_type, ddpm_mode=""):
+    # Create method-specific subfolder
+    method_folder = pipeline_type
+    if pipeline_type == 'ddpm':
+        method_folder = f"{pipeline_type}_{ddpm_mode}"
+    method_path = os.path.join(output_dir, method_folder)
+
+    # Create seed-specific subfolder
+    seed_path = os.path.join(method_path, f"seed_{seed}")
+
+    # Create all necessary directories
+    os.makedirs(seed_path, exist_ok=True)
+
+    # Create filename
+    base_name = os.path.splitext(image_name)[0]
+    # timestamp = calendar.timegm(time.gmtime())
+    # new_name = f"{base_name}_{timestamp}.png"
+    new_name = f"{base_name}.png"
+
+    return os.path.join(seed_path, new_name)
+
+
+def process_with_ledits(pipe, image_path, prompt, output_path, seed, device, args):
+    try:
+        # Set random seed with CPU generator
+        generator = torch.Generator(device=device)
+        generator.manual_seed(seed)
+
+        image = PIL.Image.open(image_path).convert("RGB")
+        _ = pipe.invert(image, num_inversion_steps=50, skip=0.1)
         edited_image = pipe(
             editing_prompt=[prompt],
-            edit_guidance_scale=guidance_scale,
-            edit_threshold=edit_threshold,
-            generator=gen
+            edit_guidance_scale=args.ledits_guidance_scale,
+            edit_threshold=args.ledits_edit_threshold,
         ).images[0]
 
         edited_image.save(output_path)
@@ -154,19 +210,20 @@ def process_with_ledits(pipe, image_path, prompt, output_path, seed, device, gui
         return False
 
 
-def process_with_img2img(pipe, image_path, prompt, output_path, seed, device, guidance_scale, strength, num_inference_steps):
+def process_with_img2img(pipe, image_path, prompt, output_path, seed, device, args):
     try:
-        image = PIL.Image.open(image_path).convert("RGB")
-        gen = torch.Generator(device=device)
-        gen.manual_seed(seed)
+        # Set random seed with CPU generator
+        generator = torch.Generator(device='cpu')
+        generator.manual_seed(seed)
 
+        image = PIL.Image.open(image_path).convert("RGB")
         result = pipe(
             prompt=prompt,
             image=image,
-            strength=strength,
-            guidance_scale=guidance_scale,
-            num_inference_steps=num_inference_steps,
-            generator=gen
+            strength=args.img2img_strength,
+            guidance_scale=args.img2img_guidance_scale,
+            num_inference_steps=args.img2img_num_inference_steps,
+            generator=generator
         )
 
         result.images[0].save(output_path)
@@ -178,16 +235,15 @@ def process_with_img2img(pipe, image_path, prompt, output_path, seed, device, gu
 
 def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, blip_captioner):
     try:
-        # Set random seed
-        gen = torch.Generator(device=args.device)
-        gen.manual_seed(seed)
+        # Set random seed with CPU generator
+        generator = torch.Generator(device='cpu')
+        generator.manual_seed(seed)
 
         # Load and prepare image
         x0 = load_512(image_path, 0, 0, 0, 0, args.device)
 
         # Generate source prompt using BLIP
         source_prompt = blip_captioner.generate_caption(PIL.Image.open(image_path).convert("RGB"))
-        # source_prompt = 'A sketch of a cat'
         print(f"BLIP generated source prompt: {source_prompt}")
 
         # Encode image with VAE
@@ -196,12 +252,12 @@ def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, 
 
         # Forward process
         if args.ddpm_mode in ["p2pddim", "ddim"]:
-            wT = ddim_inversion(pipe, w0, source_prompt, args.cfg_src)
+            wT = ddim_inversion(pipe, w0, source_prompt, args.ddpm_cfg_src)
         else:
             wt, zs, wts = inversion_forward_process(
-                pipe, w0, etas=args.eta, prompt=source_prompt,
-                cfg_scale=args.cfg_src, prog_bar=True,
-                num_inference_steps=args.num_inference_steps
+                pipe, w0, etas=args.ddpm_eta, prompt=source_prompt,
+                cfg_scale=args.ddpm_cfg_src, prog_bar=True,
+                num_inference_steps=args.ddpm_num_inference_steps
             )
 
         # Set up attention controller based on mode
@@ -213,24 +269,24 @@ def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, 
             if src_tar_len_eq:
                 controller = AttentionReplace(
                     [source_prompt, target_prompt],
-                    args.num_inference_steps,
-                    cross_replace_steps=args.xa,
-                    self_replace_steps=args.sa,
+                    args.ddpm_num_inference_steps,
+                    cross_replace_steps=args.ddpm_xa,
+                    self_replace_steps=args.ddpm_sa,
                     model=pipe
                 )
             else:
                 controller = AttentionRefine(
                     [source_prompt, target_prompt],
-                    args.num_inference_steps,
-                    cross_replace_steps=args.xa,
-                    self_replace_steps=args.sa,
+                    args.ddpm_num_inference_steps,
+                    cross_replace_steps=args.ddpm_xa,
+                    self_replace_steps=args.ddpm_sa,
                     model=pipe
                 )
         elif args.ddpm_mode == "p2pddim":
             if src_tar_len_eq:
                 controller = AttentionReplace(
                     [source_prompt, target_prompt],
-                    args.num_inference_steps,
+                    args.ddpm_num_inference_steps,
                     cross_replace_steps=0.8,
                     self_replace_steps=0.4,
                     model=pipe
@@ -238,7 +294,7 @@ def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, 
             else:
                 controller = AttentionRefine(
                     [source_prompt, target_prompt],
-                    args.num_inference_steps,
+                    args.ddpm_num_inference_steps,
                     cross_replace_steps=0.8,
                     self_replace_steps=0.4,
                     model=pipe
@@ -252,36 +308,36 @@ def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, 
         if args.ddpm_mode == "our_inv":
             w0, _ = inversion_reverse_process(
                 pipe,
-                xT=wts[args.skip],
-                etas=args.eta,
+                xT=wts[args.ddpm_skip],
+                etas=args.ddpm_eta,
                 prompts=[target_prompt],
-                cfg_scales=[args.cfg_tar],
+                cfg_scales=[args.ddpm_cfg_tar],
                 prog_bar=True,
-                zs=zs[:args.skip],
+                zs=zs[:args.ddpm_skip],
                 controller=controller
             )
         elif args.ddpm_mode == "p2pinv":
             w0, _ = inversion_reverse_process(
                 pipe,
-                xT=wts[args.num_inference_steps - args.skip],
-                etas=args.eta,
+                xT=wts[args.ddpm_num_inference_steps - args.ddpm_skip],
+                etas=args.ddpm_eta,
                 prompts=[source_prompt, target_prompt],
-                cfg_scales=[args.cfg_src, args.cfg_tar],
+                cfg_scales=[args.ddpm_cfg_src, args.ddpm_cfg_tar],
                 prog_bar=True,
-                zs=zs[:(args.num_inference_steps - args.skip)],
+                zs=zs[:(args.ddpm_num_inference_steps - args.ddpm_skip)],
                 controller=controller
             )
             w0 = w0[1].unsqueeze(0)
         else:  # p2pddim or ddim
-            if args.skip != 0:
+            if args.ddpm_skip != 0:
                 print("Skip parameter ignored for p2pddim/ddim mode")
 
             w0, _ = text2image_ldm_stable(
                 pipe,
                 [source_prompt, target_prompt],
                 controller,
-                args.num_inference_steps,
-                [args.cfg_src, args.cfg_tar],
+                args.ddpm_num_inference_steps,
+                [args.ddpm_cfg_src, args.ddpm_cfg_tar],
                 None,
                 wT
             )
@@ -312,21 +368,72 @@ def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, 
             json.dump(prompt_info, f, indent=2)
 
         return True
-
     except Exception as e:
         print(f"Error processing {image_path} with DDPM (seed {seed}): {str(e)}")
         return False
 
 
-def get_output_path(output_dir, image_name, seed, pipeline_type, ddpm_mode=""):
-    base_name = os.path.splitext(image_name)[0]
-    timestamp = calendar.timegm(time.gmtime())
+def process_with_pix2pix(pipe, image_path, target_prompt, output_path, seed, args, blip_captioner):
+    try:
+        # Set random seed with CPU generator
+        generator = torch.Generator(device='cpu')
+        generator.manual_seed(seed)
 
-    if pipeline_type == 'ddpm':
-        new_name = f"{base_name}_{pipeline_type}_{ddpm_mode}_seed{seed}_{timestamp}.png"
-    else:
-        new_name = f"{base_name}_{pipeline_type}_seed{seed}_{timestamp}.png"
-    return os.path.join(output_dir, new_name)
+        # Load and prepare image
+        image = PIL.Image.open(image_path).convert("RGB").resize((512, 512))
+
+        # Generate source prompt using BLIP
+        source_prompt = blip_captioner.generate_caption(image)
+        print(f"BLIP generated source prompt: {source_prompt}")
+
+        # Generate source and target embeddings
+        source_prompts = [
+            source_prompt,
+        ]
+        target_prompts = [
+            target_prompt,
+        ]
+
+        # Get embeddings
+        source_embeds = generate_embeddings(pipe, source_prompts)
+        target_embeds = generate_embeddings(pipe, target_prompts)
+
+        # Get inverted latents
+        inv_latents = pipe.invert(
+            source_prompt,
+            image=image,
+            generator=generator
+        ).latents
+
+        # Generate edited image
+        result = pipe(
+            source_prompt,
+            source_embeds=source_embeds,
+            target_embeds=target_embeds,
+            num_inference_steps=args.pix2pix_num_inference_steps,
+            cross_attention_guidance_amount=args.pix2pix_cross_attention_guidance_amount,
+            guidance_scale=args.pix2pix_guidance_scale,
+            generator=generator,
+            latents=inv_latents,
+            negative_prompt=source_prompt,
+        )
+
+        # Save image
+        result.images[0].save(output_path)
+
+        # Save prompts
+        prompt_info = {
+            "source_prompt": source_prompt,
+            "target_prompt": target_prompt
+        }
+        prompt_path = output_path.rsplit('.', 1)[0] + '_prompts.json'
+        with open(prompt_path, 'w') as f:
+            json.dump(prompt_info, f, indent=2)
+
+        return True
+    except Exception as e:
+        print(f"Error processing {image_path} with Pix2Pix Zero (seed {seed}): {str(e)}")
+        return False
 
 
 def main():
@@ -334,9 +441,9 @@ def main():
     os.makedirs(args.output_dir, exist_ok=True)
     prompt_data = load_json_data(args.json_path)
 
-    # Initialize BLIP if using DDPM
+    # Initialize BLIP if using DDPM or Pix2Pix
     blip_captioner = None
-    if args.pipeline == 'ddpm':
+    if args.pipeline in ['ddpm', 'pix2pix']:
         blip_captioner = BlipCaptioner(args.device)
 
     # Setup appropriate pipeline
@@ -346,6 +453,9 @@ def main():
     elif args.pipeline == 'img2img':
         pipe = setup_img2img_pipeline(args.model_path, args.device)
         process_func = process_with_img2img
+    elif args.pipeline == 'pix2pix':
+        pipe = setup_pix2pix_pipeline(args.model_path, args.device)
+        process_func = process_with_pix2pix
     else:  # ddpm
         pipe = setup_ddpm_pipeline(args.model_path, args.device, args)
         process_func = process_with_ddpm
@@ -373,16 +483,20 @@ def main():
                         pipe, input_path, target_prompt, output_path,
                         seed, args, blip_captioner
                     )
+                elif args.pipeline == 'pix2pix':
+                    success = process_func(
+                        pipe, input_path, target_prompt, output_path,
+                        seed, args, blip_captioner
+                    )
                 elif args.pipeline == 'ledits':
                     success = process_func(
                         pipe, input_path, target_prompt, output_path,
-                        seed, args.device, args.guidance_scale, args.edit_threshold
+                        seed, args.device, args
                     )
                 else:  # img2img
                     success = process_func(
                         pipe, input_path, target_prompt, output_path,
-                        seed, args.device, args.guidance_scale,
-                        args.strength, args.num_inference_steps
+                        seed, args.device, args
                     )
 
                 if success:
@@ -395,22 +509,39 @@ def main():
     # Print summary
     print(f"\nProcessing complete!")
     print(f"Pipeline used: {args.pipeline}")
-    if args.pipeline == 'ddpm':
-        print(f"DDPM mode: {args.ddpm_mode}")
     print(f"Successfully processed: {successful} images")
     print(f"Failed to process: {failed} images")
     print(f"Seeds used: {args.seeds}")
-    print(f"Guidance scale: {args.guidance_scale}")
-    if args.pipeline == 'img2img':
-        print(f"Strength: {args.strength}")
-    if args.pipeline == 'ddpm':
-        print(f"Source CFG: {args.cfg_src}")
-        print(f"Target CFG: {args.cfg_tar}")
-        print(f"Skip steps: {args.skip}")
-        print(f"ETA: {args.eta}")
-        print(f"XA: {args.xa}")
-        print(f"SA: {args.sa}")
-    print(f"Number of inference steps: {args.num_inference_steps}")
+
+    # Print method-specific parameters
+    if args.pipeline == 'ledits':
+        print(f"LEDITS parameters:")
+        print(f"  Guidance scale: {args.ledits_guidance_scale}")
+        print(f"  Edit threshold: {args.ledits_edit_threshold}")
+        print(f"  Inference steps: {args.ledits_num_inference_steps}")
+
+    elif args.pipeline == 'img2img':
+        print(f"img2img parameters:")
+        print(f"  Guidance scale: {args.img2img_guidance_scale}")
+        print(f"  Strength: {args.img2img_strength}")
+        print(f"  Inference steps: {args.img2img_num_inference_steps}")
+
+    elif args.pipeline == 'ddpm':
+        print(f"DDPM parameters:")
+        print(f"  Mode: {args.ddpm_mode}")
+        print(f"  Source CFG: {args.ddpm_cfg_src}")
+        print(f"  Target CFG: {args.ddpm_cfg_tar}")
+        print(f"  Skip steps: {args.ddpm_skip}")
+        print(f"  ETA: {args.ddpm_eta}")
+        print(f"  XA: {args.ddpm_xa}")
+        print(f"  SA: {args.ddpm_sa}")
+        print(f"  Inference steps: {args.ddpm_num_inference_steps}")
+
+    elif args.pipeline == 'pix2pix':
+        print(f"Pix2Pix parameters:")
+        print(f"  Guidance scale: {args.pix2pix_guidance_scale}")
+        print(f"  Cross attention guidance amount: {args.pix2pix_cross_attention_guidance_amount}")
+        print(f"  Inference steps: {args.pix2pix_num_inference_steps}")
 
 
 if __name__ == "__main__":
