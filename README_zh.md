@@ -34,7 +34,7 @@
   已经开源。欢迎前往下载并使用。
 - 🔥 ```2024/8/27```:  我们开源 CogVideoX 系列更大的模型 **CogVideoX-5B**
   。我们大幅度优化了模型的推理性能，推理门槛大幅降低，您可以在 `GTX 1080TI` 等早期显卡运行 **CogVideoX-2B**，在 `RTX 3060`
-  等桌面端甜品卡运行 **CogVideoX-5B** 模型。 请严格按照[要求](requirements.txt)
+  等桌面端甜品卡运行 **CogVideoX-5B** 模型。 请严格按照[要求](requirements_cog.txt)
   更新安装依赖，推理代码请查看 [cli_demo](inference/cli_demo.py)。同时，**CogVideoX-2B** 模型开源协议已经修改为**Apache 2.0
   协议**。
 - 🔥 ```2024/8/6```: 我们开源 **3D Causal VAE**，用于 **CogVideoX-2B**，可以几乎无损地重构视频。

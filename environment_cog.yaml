@@ -13,4 +13,4 @@ dependencies:
   - lightning
   - numpy=1.26
   - pip:
-    - -r requirements.txt
+    - -r requirements_cog.txt
