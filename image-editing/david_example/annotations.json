@@ -7,6 +7,12 @@
         }
     ],
     "images": [
-{"image_name": "a1_s1.png", "original_prompt": "A person with their left hand raised to the right.", "video_prompts": ["A person smoothly raises their left hand to the right."], "d_id": 1, "d_name": "a1_s1", "d_instruct": "Cross left arm to the right"}
+        {
+            "image_name": "a1_s1_original.png",
+            "original_prompt": "A person with their left hand raised to the right.",
+            "video_prompts": ["A person smoothly raises their left hand to the right."],
+            "d_id": 1,
+            "d_name": "a1_s1",
+            "d_instruct": "Cross left arm to the right"}
     ]
 }
