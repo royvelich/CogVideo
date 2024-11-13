@@ -285,10 +285,11 @@ def resize_and_pad_image(image_path: str, target_height: int = 480, target_width
     width_ratio = target_width / orig_width
     height_ratio = target_height / orig_height
 
-    if orig_width <= target_width and orig_height <= target_height:
-        scale_ratio = max(width_ratio, height_ratio)
-    else:
-        scale_ratio = min(width_ratio, height_ratio)
+    # if orig_width <= target_width and orig_height <= target_height:
+    #     scale_ratio = max(width_ratio, height_ratio)
+    # else:
+
+    scale_ratio = min(width_ratio, height_ratio)
 
     new_width = int(orig_width * scale_ratio)
     new_height = int(orig_height * scale_ratio)
