@@ -1,0 +1,180 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${video_prompt}"
+            }
+        }
+    ],
+    "images": [
+        {
+            "image_name": "3.png",
+            "original_prompt": "A circus horse.",
+            "video_prompts": [
+                "A colorful circus backdrop unfurls behind the horse."
+            ]
+        },
+        {
+            "image_name": "5.png",
+            "original_prompt": "A photo of a breakdancing dog.",
+            "video_prompts": [
+                "The dog begins spinning on its back legs as he breakdances."
+            ]
+        },
+        {
+            "image_name": "16.png",
+            "original_prompt": "A girl riding a horse.",
+            "video_prompts": [
+                "The horse lowers its head, revealing a girl seated on its back."
+            ]
+        },
+        {
+            "image_name": "19.png",
+            "original_prompt": "A standing horse.",
+            "video_prompts": [
+                "The horse gradually slows its pace until it stands still."
+            ]
+        },
+        {
+            "image_name": "21.png",
+            "original_prompt": "Pizza with pineapple.",
+            "video_prompts": [
+                "Slices of pineapple appear on top of the pizza."
+            ]
+        },
+        {
+            "image_name": "22.png",
+            "original_prompt": "A parade on a street.",
+            "video_prompts": [
+                "People gradually begin to fill the street, forming a vibrant parade."
+            ]
+        },
+        {
+            "image_name": "31.png",
+            "original_prompt": "A horse raising its head.",
+            "video_prompts": [
+                "The horse slowly lifts its head."
+            ]
+        },
+        {
+            "image_name": "32.png",
+            "original_prompt": "A photo of a traffic jam.",
+            "video_prompts": [
+                "Cars begin to fill the once-clear highway, gradually slowing to a standstill."
+            ]
+        },
+        {
+            "image_name": "35.png",
+            "original_prompt": "A photo of a yawning dog.",
+            "video_prompts": [
+                "The dog's mouth gradually opens wide in a big yawn."
+            ]
+        },
+        {
+            "image_name": "36.png",
+            "original_prompt": "A photo of a coffee house in a street.",
+            "video_prompts": [
+                "The shop signs gradually change to reveal a cozy coffee house on the street."
+            ]
+        },
+        {
+            "image_name": "42.png",
+            "original_prompt": "Pizza with pepperoni.",
+            "video_prompts": [
+                "Pepperoni slices slowly appear on the pizza."
+
+            ]
+        },
+        {
+            "image_name": "43.png",
+            "original_prompt": "A photo of a dog laying down.",
+            "video_prompts": [
+                "The dog gently lowers itself down, lying on the ground."
+            ]
+        },
+        {
+            "image_name": "49.png",
+            "original_prompt": "A horse in a show jumping attire.",
+            "video_prompts": [
+                "The horse readies to jump as a saddle and bridle appear."
+            ]
+        },
+        {
+            "image_name": "50.png",
+            "original_prompt": "A half eaten pizza.",
+            "video_prompts": [
+                "Half of the pieces gradually disappear from the pizza."
+            ]
+        },
+        {
+            "image_name": "56.png",
+            "original_prompt": "A cyclist riding in a street.",
+            "video_prompts": [
+                "A cyclist gradually emerges, pedaling along the cobblestone street."
+            ]
+        },
+        {
+            "image_name": "61.png",
+            "original_prompt": "A photo of a couple holding their hands on a beach.",
+            "video_prompts": [
+                "The couple on the beach gradually moves closer to each other and holds hands."
+            ]
+        },
+        {
+            "image_name": "64.png",
+            "original_prompt": "A photo of a jumping dog.",
+            "video_prompts": [
+                "The dog first lifts its front legs and then leaps into the air."
+            ]
+        },
+        {
+            "image_name": "66.png",
+            "original_prompt": "A cookie next to a glass of juice.",
+            "video_prompts": [
+                "The milk in the glass gradually changes to juice."
+            ]
+        },
+        {
+            "image_name": "67.png",
+            "original_prompt": "A photo of a sitting dog.",
+            "video_prompts": [
+                "The dog gradually lowers its back legs, settling into a seated position."
+            ]
+        },
+        {
+            "image_name": "71.png",
+            "original_prompt": "A snow princess next to a unicorn.",
+            "video_prompts": [
+                "The horse transforms into a unicorn as a snow princess gracefully appears beside it."
+            ]
+        },
+        {
+            "image_name": "82.png",
+            "original_prompt": "An image of a post apocalyptic road.",
+            "video_prompts": [
+                "Dark clouds gather swiftly, casting the road in a bleak, deserted landscape."
+            ]
+        },
+        {
+            "image_name": "85.png",
+            "original_prompt": "A photo of a zebra.",
+            "video_prompts": [
+                "The horse transforms into a zebra, its coat turning into black-and-white stripes."
+            ]
+        },
+        {
+            "image_name": "89.png",
+            "original_prompt": "A jumping horse.",
+            "video_prompts": [
+                "The horse gracefully gathers speed and leaps into the air."
+            ]
+        },
+        {
+            "image_name": "95.png",
+            "original_prompt": "A white horse in a grass field.",
+            "video_prompts": [
+                "The snow beneath the white horse melts, revealing a lush grass field."
+            ]
+        }
+    ]
+}
