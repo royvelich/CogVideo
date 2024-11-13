@@ -1,0 +1,180 @@
+{
+    "settings": [
+        {
+            "cog": {
+                "prompt": "${video_prompt}"
+            }
+        }
+    ],
+    "images": [
+        {
+            "image_name": "3.png",
+            "original_prompt": "A circus horse.",
+            "video_prompts": [
+                "A circus horse."
+            ]
+        },
+        {
+            "image_name": "5.png",
+            "original_prompt": "A photo of a breakdancing dog.",
+            "video_prompts": [
+                "A photo of a breakdancing dog."
+            ]
+        },
+        {
+            "image_name": "16.png",
+            "original_prompt": "A girl riding a horse.",
+            "video_prompts": [
+                "A girl riding a horse."
+            ]
+        },
+        {
+            "image_name": "19.png",
+            "original_prompt": "A standing horse.",
+            "video_prompts": [
+                "A standing horse."
+            ]
+        },
+        {
+            "image_name": "21.png",
+            "original_prompt": "Pizza with pineapple.",
+            "video_prompts": [
+                "Pizza with pineapple."
+            ]
+        },
+        {
+            "image_name": "22.png",
+            "original_prompt": "A parade on a street.",
+            "video_prompts": [
+                "A parade on a street."
+            ]
+        },
+        {
+            "image_name": "31.png",
+            "original_prompt": "A horse raising its head.",
+            "video_prompts": [
+                "A horse raising its head."
+            ]
+        },
+        {
+            "image_name": "32.png",
+            "original_prompt": "A photo of a traffic jam.",
+            "video_prompts": [
+                "A photo of a traffic jam."
+            ]
+        },
+        {
+            "image_name": "35.png",
+            "original_prompt": "A photo of a yawning dog.",
+            "video_prompts": [
+                "A photo of a yawning dog."
+            ]
+        },
+        {
+            "image_name": "36.png",
+            "original_prompt": "A photo of a coffee house in a street.",
+            "video_prompts": [
+                "A photo of a coffee house in a street."
+            ]
+        },
+        {
+            "image_name": "42.png",
+            "original_prompt": "Pizza with pepperoni.",
+            "video_prompts": [
+                "Pizza with pepperoni."
+
+            ]
+        },
+        {
+            "image_name": "43.png",
+            "original_prompt": "A photo of a dog laying down.",
+            "video_prompts": [
+                "A photo of a dog laying down."
+            ]
+        },
+        {
+            "image_name": "49.png",
+            "original_prompt": "A horse in a show jumping attire.",
+            "video_prompts": [
+                "A horse in a show jumping attire."
+            ]
+        },
+        {
+            "image_name": "50.png",
+            "original_prompt": "A half eaten pizza.",
+            "video_prompts": [
+                "A half eaten pizza."
+            ]
+        },
+        {
+            "image_name": "56.png",
+            "original_prompt": "A cyclist riding in a street.",
+            "video_prompts": [
+                "A cyclist riding in a street."
+            ]
+        },
+        {
+            "image_name": "61.png",
+            "original_prompt": "A photo of a couple holding their hands on a beach.",
+            "video_prompts": [
+                "A photo of a couple holding their hands on a beach."
+            ]
+        },
+        {
+            "image_name": "64.png",
+            "original_prompt": "A photo of a jumping dog.",
+            "video_prompts": [
+                "A photo of a jumping dog."
+            ]
+        },
+        {
+            "image_name": "66.png",
+            "original_prompt": "A cookie next to a glass of juice.",
+            "video_prompts": [
+                "A cookie next to a glass of juice."
+            ]
+        },
+        {
+            "image_name": "67.png",
+            "original_prompt": "A photo of a sitting dog.",
+            "video_prompts": [
+                "A photo of a sitting dog."
+            ]
+        },
+        {
+            "image_name": "71.png",
+            "original_prompt": "A snow princess next to a unicorn.",
+            "video_prompts": [
+                "A snow princess next to a unicorn."
+            ]
+        },
+        {
+            "image_name": "82.png",
+            "original_prompt": "An image of a post apocalyptic road.",
+            "video_prompts": [
+                "An image of a post apocalyptic road."
+            ]
+        },
+        {
+            "image_name": "85.png",
+            "original_prompt": "A photo of a zebra.",
+            "video_prompts": [
+                "A photo of a zebra."
+            ]
+        },
+        {
+            "image_name": "89.png",
+            "original_prompt": "A jumping horse.",
+            "video_prompts": [
+                "A jumping horse."
+            ]
+        },
+        {
+            "image_name": "95.png",
+            "original_prompt": "A white horse in a grass field.",
+            "video_prompts": [
+                "A white horse in a grass field."
+            ]
+        }
+    ]
+}
