@@ -243,7 +243,8 @@ def process_with_ddpm(pipe, image_path, target_prompt, output_path, seed, args, 
         x0 = load_512(image_path, 0, 0, 0, 0, args.device)
 
         # Generate source prompt using BLIP
-        source_prompt = blip_captioner.generate_caption(PIL.Image.open(image_path).convert("RGB"))
+        # source_prompt = blip_captioner.generate_caption(PIL.Image.open(image_path).convert("RGB"))
+        source_prompt = 'A man standing naturally with his arms relaxed at his sides.'
         print(f"BLIP generated source prompt: {source_prompt}")
 
         # Encode image with VAE
