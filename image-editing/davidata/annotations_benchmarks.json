@@ -1,0 +1,418 @@
+[
+    {
+      "image_name": "a1_s1.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s2.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s3.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s4.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s5.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s6.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s7.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a1_s8.png",
+      "original_prompt": "A person with their left hand raised to the right."
+    },
+    {
+      "image_name": "a2_s1.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s2.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s3.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s4.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s5.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s6.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s7.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a2_s8.png",
+      "original_prompt": "A person streches their left hand to the left."
+    },
+    {
+      "image_name": "a4_s1.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s2.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s3.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s4.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s5.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s6.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s7.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a4_s8.png",
+      "original_prompt": "A person clapping their hands."
+    },
+    {
+      "image_name": "a5_s1.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s2.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s3.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s4.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s5.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s6.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s7.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a5_s8.png",
+      "original_prompt": "A person making a throwing motion with their left hand."
+    },
+    {
+      "image_name": "a6_s1.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s2.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s3.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s4.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s5.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s6.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s7.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a6_s8.png",
+      "original_prompt": "A person making a cross sign with their hands."
+    },
+    {
+      "image_name": "a7_s1.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s2.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s3.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s4.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s5.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s6.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s7.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a7_s8.png",
+      "original_prompt": "A person making a basketball shooting posture."
+    },
+    {
+      "image_name": "a12_s1.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s2.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s3.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s4.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s5.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s6.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s7.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a12_s8.png",
+      "original_prompt": "A person making a bowling motion with their left hand."
+    },
+    {
+      "image_name": "a16_s1.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s2.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s3.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s4.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s5.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s6.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s7.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a16_s8.png",
+      "original_prompt": "A person holding their bent arms with closed hands near their face."
+    },
+    {
+      "image_name": "a18_s1.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s2.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s3.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s4.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s5.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s6.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s7.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a18_s8.png",
+      "original_prompt": "A person pushing forward with both hands."
+    },
+    {
+      "image_name": "a19_s1.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s2.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s3.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s4.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s5.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s6.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s7.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a19_s8.png",
+      "original_prompt": "A person making a knocking motion with their left hand."
+    },
+    {
+      "image_name": "a22_s1.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s2.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s3.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s4.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s5.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s6.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s7.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a22_s8.png",
+      "original_prompt": "A person jogging."
+    },
+    {
+      "image_name": "a26_s1.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s2.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s3.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s4.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s5.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s6.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s7.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a26_s8.png",
+      "original_prompt": "A person is lunging with their right foot forward."
+    },
+    {
+      "image_name": "a27_s1.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s2.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s3.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s4.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s5.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s6.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s7.png",
+      "original_prompt": "A person performing a squat."
+    },
+    {
+      "image_name": "a27_s8.png",
+      "original_prompt": "A person performing a squat."
+    }
+]
