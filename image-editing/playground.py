@@ -43,6 +43,6 @@ def resize_and_pad_image(image_path: str, target_height: int = 480, target_width
     return final_img
 
 
-image_path = 'C:/Users/Roy/Documents/GitHub/CogVideo-royve/image-editing/tedbench_data/images/82.png'
+image_path = 'C:/Users/Roy/Documents/GitHub/CogVideo-royve/image-editing/davidata/src_images_resized/a1_s1.png'
 img = resize_and_pad_image(image_path=image_path)
 img.show()
