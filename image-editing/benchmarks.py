@@ -384,7 +384,8 @@ def process_with_pix2pix(pipe, image_path, target_prompt, output_path, seed, arg
         image = PIL.Image.open(image_path).convert("RGB").resize((512, 512))
 
         # Generate source prompt using BLIP
-        source_prompt = blip_captioner.generate_caption(image)
+        # source_prompt = blip_captioner.generate_caption(image)
+        source_prompt = 'A man standing naturally with his arms relaxed at his sides.'
         print(f"BLIP generated source prompt: {source_prompt}")
 
         # Generate source and target embeddings
