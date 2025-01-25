@@ -1,4 +1,4 @@
-name: cog
+name: cog-f2f
 channels:
   - pytorch
   - nvidia
